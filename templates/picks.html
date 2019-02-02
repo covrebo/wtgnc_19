@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<main role="main" class="container text-center">
+    <h1 class="h1">Weekly Picks</h1>
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Driver #1</th>
+                <th scope="col">Driver #2</th>
+                <th scope="col">Driver #3</th>
+                <th scope="col">Manufacturer</th>
+            </tr>
+        </thead>
+        <tbody class="table-striped">
+            {% for pick in picks %}
+                {% if pick.week == 1 %}
+                    <tr>
+                        <td>{{ pick.display_name }}</td>
+                        <td>{{ pick.pick_1 }}</td>
+                        <td>{{ pick.pick_2 }}</td>
+                        <td>{{ pick.pick_3 }}</td>
+                        <td>{{ pick.manufacturer }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock content %}
