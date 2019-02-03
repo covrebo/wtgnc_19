@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+    <body class="container col-md-4">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <h4 class="">Select the Race to View</h4>
+                <div class="form-group">
+                    <div class="">
+                            {{ form.week.label(class='form-control-label') }}
+                            {{ form.week(class='form-control') }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </fieldset>
+        </form>
+    </body>
+{% endblock content %}
