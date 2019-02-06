@@ -175,6 +175,6 @@ picks = [
 
 make_list = [
     ('Chevrolet', 'Chevrolet'),
-    ('Ford', 'Ford')
+    ('Ford', 'Ford'),
     ('Toyota', 'Toyota')
 ]

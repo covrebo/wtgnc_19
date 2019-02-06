@@ -3,7 +3,7 @@ from flask import Flask, render_template, url_for, session, flash, redirect
 from forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm
 
 # TEMP import of entry list from another file
-from data_vars import entry_list_detailed
+from data_vars import entry_list_detailed, picks
 
 app = Flask(__name__)
 
@@ -35,13 +35,13 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 # Route to submit weekly driver roster
-@app.route('/pick-page')
+@app.route('/pick-page', methods=['GET', 'POST'])
 def pick_page():
     # TODO add login requirement
     # TODO add modal to the page to confirm which week they are pick for
     form = PickSelectionForm()
     if form.validate_on_submit():
-        flash(f'You have set your roster for {str(session['week'])}', 'success')
+        flash(f"You have set your roster for {str(session['week'])}.", 'success')
         # TODO change redirect to pick summary page
         return redirect(url_for('home'))
     return render_template('pick-page.html', title='Pick Page', form=form)

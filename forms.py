@@ -63,6 +63,20 @@ class WeekSelectionForm(FlaskForm):
         ], choices=schedule_brief)
     submit = SubmitField('Set Week')
 
+# Custom validator to make sure picks are unique
+# TODO: Move this validation to the route in app.py
+# def pick_check_1(form, field):
+#     if pick_1.data == pick_2.data or pick_1.data == pick_3.data:
+#         raise ValidationError('Please pick three DIFFERENT drivers.')
+#
+# def pick_check_2(form, field):
+#     if pick_2.data == pick_1.data or pick_2.data == pick_3.data:
+#         raise ValidationError('Please pick three DIFFERENT drivers.')
+#
+# def pick_check_3(form, field):
+#     if pick_3.data == pick_2.data or pick_3.data == pick_2.data:
+#         raise ValidationError('Please pick three DIFFERENT drivers.')
+
 # Form to submit picks each week
 class PickSelectionForm(FlaskForm):
     # Form field to choose the week to display data from
