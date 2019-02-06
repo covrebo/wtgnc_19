@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SubmitField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
+from data_vars import schedule_brief, make_list, entry_list_brief
 
 # Create a registration form class
 class RegistrationForm(FlaskForm):
@@ -59,10 +60,22 @@ class WeekSelectionForm(FlaskForm):
     # Form field to choose the week to display data from
     week = SelectField('Choose the week from the drop down list', validators=[
         DataRequired()
-        ], choices=[('Week 1 - Daytona', 'Week 1 - Daytona'),
-                    ('Week 2 - Atlanta', 'Week 2 - Atlanta'),
-                    ('Week 3 - Las Vegas', 'Week 3 - Las Vegas'),
-                    ('Week 4 - Phoenix', 'Week 4 - Phoenix'),
-                    ('Week 4 - Phoenix', 'Week 4 - Phoenix'),
-        ])
+        ], choices=schedule_brief)
     submit = SubmitField('Set Week')
+
+# Form to submit picks each week
+class PickSelectionForm(FlaskForm):
+    # Form field to choose the week to display data from
+    pick_1 = SelectField('Choose a driver from the drop down list', validators=[
+        DataRequired()
+        ], choices=entry_list_brief)
+    pick_2 = SelectField('Choose a driver from the drop down list', validators=[
+        DataRequired()
+    ], choices=entry_list_brief)
+    pick_3 = SelectField('Choose a driver from the drop down list', validators=[
+        DataRequired()
+        ], choices=entry_list_brief)
+    make = SelectField('Choose a manufacturer from the drop down list', validators=[
+        DataRequired()
+        ], choices=make_list)
+    submit = SubmitField('Set Roster')
