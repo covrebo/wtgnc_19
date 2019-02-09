@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, SubmitField, PasswordField, BooleanField
+from wtforms import StringField, SelectField, SubmitField, PasswordField, BooleanField, IntegerField, DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from data_vars import schedule_brief, make_list, entry_list_brief
 
@@ -93,3 +93,50 @@ class PickSelectionForm(FlaskForm):
         DataRequired()
         ], choices=make_list)
     submit = SubmitField('Set Roster')
+
+# Form to create a driver entry
+class EntryForm(FlaskForm):
+    # Form field to choose the week to display data from
+    car_number = IntegerField(validators=[
+        DataRequired()
+        ])
+    driver = StringField('Driver Name', validators=[
+        DataRequired(),
+        Length(min=2, max=30)
+    ])
+    sponsor = StringField('Sponsor', validators=[
+        DataRequired(),
+        Length(min=2, max=50)
+    ])
+    make = SelectField(validators=[
+        DataRequired()
+        ], choices=make_list)
+    team = StringField('Team', validators=[
+        DataRequired(),
+        Length(min=2, max=50)
+    ])
+    submit = SubmitField('Create Driver')
+
+# Form to schedule a race event
+class EventForm(FlaskForm):
+    # Form field to choose the week to display data from
+    week = IntegerField(validators=[
+        DataRequired()
+        ])
+    track = StringField('Track', validators=[
+        DataRequired(),
+        Length(min=2, max=30)
+    ])
+    race = StringField('Race', validators=[
+        DataRequired(),
+        Length(min=2, max=30)
+    ])
+    date = DateField(format='%m-%d-%Y', validators=[
+        DataRequired()
+        ])
+    submit = SubmitField('Create Event')
+
+# TODO Form to enter weekly standings
+# TODO Form to enter weekly results
+# TODO Form to enter weekly NASCAR results
+# TODO Form to enter weekly NASCAR standings

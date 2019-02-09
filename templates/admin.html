@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <body class="container col-md-6">
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action disabled">Update Pool Members</a>
+            <a href="{{ url_for('driver_entry') }}" class="list-group-item list-group-item-action">Create Driver Entry</a>
+            <a href="{{ url_for('race_event') }}" class="list-group-item list-group-item-action">Create Race Event</a>
+            <a href="#" class="list-group-item list-group-item-action">Upload Entry List</a>
+            <a href="#" class="list-group-item list-group-item-action">Upload Staring Lineup</a>
+            <a href="#" class="list-group-item list-group-item-action disabled">Upload Race Results</a>
+            <a href="#" class="list-group-item list-group-item-action disabled">Upload Weekly Pool Results</a>
+            <a href="#" class="list-group-item list-group-item-action disabled">Upload Pool Standings</a>
+        </div>
+    </body>
+{% endblock content %}
