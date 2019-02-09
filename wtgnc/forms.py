@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SubmitField, PasswordField, BooleanField, IntegerField, DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
-from data_vars import schedule_brief, make_list, entry_list_brief
+from wtgnc.data_vars import schedule_brief, make_list, entry_list_brief
 
 # Create a registration form class
 class RegistrationForm(FlaskForm):
@@ -64,7 +64,7 @@ class WeekSelectionForm(FlaskForm):
     submit = SubmitField('Set Week')
 
 # Custom validator to make sure picks are unique
-# TODO: Move this validation to the route in app.py
+# TODO: Move this validation to the route in routes.py
 # def pick_check_1(form, field):
 #     if pick_1.data == pick_2.data or pick_1.data == pick_3.data:
 #         raise ValidationError('Please pick three DIFFERENT drivers.')

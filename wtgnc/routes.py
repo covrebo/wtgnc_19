@@ -1,13 +1,9 @@
-import os
-from flask import Flask, render_template, url_for, session, flash, redirect
-from forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm
+from wtgnc import app, db
+from flask import render_template, url_for, session, flash, redirect
+from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm
 
 # TEMP import of entry list from another file
-from data_vars import entry_list_detailed, picks
-
-app = Flask(__name__)
-
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+from wtgnc.data_vars import entry_list_detailed, picks
 
 @app.route('/')
 @app.route('/home')
