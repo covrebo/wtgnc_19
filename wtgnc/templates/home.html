@@ -9,5 +9,8 @@
             <a class="btn btn-outline-info" href="{{ url_for('pick_page') }}">Pick Page</a>
         </form>
         {{ entry_list }}
+        {{ current_user.role }}
+        {{ session['week_num'] }}
+        {{ session['week_name'] }}
     </body>
 {% endblock content %}

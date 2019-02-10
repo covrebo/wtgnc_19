@@ -1,7 +1,8 @@
+from flask_login import login_user
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect
 from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm
-from wtgnc.models import User, Driver
+from wtgnc.models import User, Driver, Event
 
 # TEMP import of entry list from another file
 from wtgnc.data_vars import picks, entry_list_brief
@@ -11,7 +12,8 @@ from wtgnc.data_vars import picks, entry_list_brief
 @app.route('/home')
 def home():
     # TODO: List the standings on the home page
-    return render_template('home.html', entry_list=entry_list_brief)
+    week = Event.query.filter_by(week_id=1).first()
+    return render_template('home.html', entry_list=entry_list_brief, week=week)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -29,11 +31,14 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == 'admin@blog.com' and form.password.data == 'password':
-            flash('You have been logged in!', 'success')
+        # TODO: Does this protect against SQL injection?
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember.data)
+            flash(f"{session['display_name']} successfully logged in.", 'success')
             return redirect(url_for('home'))
         else:
-            flash('Login Unsuccessful. Please check username and password', 'danger')
+            flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
 # Route to the administration page
@@ -69,8 +74,11 @@ def week_selection():
     form = WeekSelectionForm()
     if form.validate_on_submit():
         # Update week value in session cookie
-        session['week'] = form.week.data
-        flash(f"You are now look at picks and results from {str(session['week'])}.", 'success')
+        # TODO: Reorder query to retrieve the latest result https://stackoverflow.com/questions/8551952/how-to-get-last-record
+        week = Event.query.filter_by(week_id=form.week.data).first()
+        session['week_num'] = week.week_id
+        session['week_name'] = week.week_str
+        flash(f"You are now looking at picks and results from {str(session['week_name'])}.", 'success')
         return redirect(url_for('home'))
     return render_template('week-selection.html', title='Week Selection', form=form)
 
@@ -97,21 +105,13 @@ def race_event():
     # TODO: Style the date selection field properly
     form = EventForm()
     if form.validate_on_submit():
+        event = Event(week_id=form.week.data, week_str=f"Week {form.week.data} - {form.track.data}", track=form.track.data, race=form.race.data, date=form.date.data)
+        db.session.add(event)
+        db.session.commit()
         flash(f"You have added the {form.race.data}.", 'success')
         # TODO change redirect to pick summary page
         return redirect(url_for('home'))
     return render_template('race-event.html', title='Race Event', legend='Create Race Event', form=form)
 
 # TODO add and admin page with links to register new users, enter schedule event, enter a driver entry, update a driver entry, enter results, enter/update weekly results, enter/update standings.
-# TODO add a route to submit driver entries for races
 # TODO add a route to submit races to the schedule
-# TODO add csv upload for race entries, weekly results, and standings
-
-if __name__ == '__main__':
-    app.run()
-
-# Feature requests
-# TODO: Add pool rules to the about page
-# TODO: Add pick history page
-# TODO: Add race info pages such as entry list, starting lineup, and results
-# TODO: Add active class to navigation links via http://jinja.pocoo.org/docs/tricks/

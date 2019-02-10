@@ -1,6 +1,8 @@
 from wtgnc.models import Driver
 
+# Create the entry list
 entry_list_detailed = Driver.query.all()
+
 entry_list_brief = [(driver.car_number, '#' + str(driver.car_number) + ' ' + driver.driver) for driver in entry_list_detailed]
 
 schedule_detailed = [
