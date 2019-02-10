@@ -1,16 +1,17 @@
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect
 from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm
-from wtgnc.models import User
+from wtgnc.models import User, Driver
 
 # TEMP import of entry list from another file
-from wtgnc.data_vars import entry_list_detailed, picks
+from wtgnc.data_vars import picks, entry_list_brief
+
 
 @app.route('/')
 @app.route('/home')
 def home():
     # TODO: List the standings on the home page
-    return render_template('home.html', entry_list=entry_list_detailed)
+    return render_template('home.html', entry_list=entry_list_brief)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -21,7 +22,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(f'Account created for {form.display_name.data}!', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -80,6 +81,9 @@ def driver_entry():
     # TODO add login requirement
     form = EntryForm()
     if form.validate_on_submit():
+        driver = Driver(car_number=form.car_number.data, driver=form.driver.data, sponsor=form.sponsor.data, make=form.make.data, team=form.team.data)
+        db.session.add(driver)
+        db.session.commit()
         flash(f"You have added {form.driver.data}.", 'success')
         # TODO change redirect to pick summary page
         return redirect(url_for('home'))

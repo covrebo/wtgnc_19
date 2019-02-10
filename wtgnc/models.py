@@ -47,7 +47,7 @@ class Driver(db.Model):
     team = db.Column(db.String(30), nullable=False)
 
     def __repr__(self):
-        return f"Driver('{self.week_str}', '{self.car_number}', '{self.driver}', '{self.sponsor}'," \
+        return f"Driver('{self.car_number}', '{self.driver}', '{self.sponsor}'," \
             f"'{self.make}', '{self.team}')"
 
 
@@ -62,7 +62,7 @@ class Pick(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"Pick('{self.week_str}', '{self.display_name}', '{self.driver_1}', '{self.driver_2}'," \
+        return f"Pick('{self.week}', '{self.display_name}', '{self.driver_1}', '{self.driver_2}'," \
             f"'{self.driver_3}', '{self.make}')"
 
 
@@ -74,7 +74,7 @@ class Result(db.Model):
     points = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"Result('{self.week_str}', '{self.car_number}', '{self.driver}', '{self.points}')"
+        return f"Result('{self.week}', '{self.car_number}', '{self.driver}', '{self.points}')"
 
 
 class Make(db.Model):
