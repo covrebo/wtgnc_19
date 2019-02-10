@@ -8,11 +8,11 @@ class RegistrationForm(FlaskForm):
     # Form fields with validators
     user_first_name = StringField('First Name', validators=[
         DataRequired(),
-        Length(min=2, max=30)
+        Length(min=2, max=20)
     ])
     user_last_name = StringField('Last Name', validators=[
         DataRequired(),
-        Length(min=2, max=30)
+        Length(min=2, max=20)
     ])
     display_name = StringField('Display Name', validators=[
         DataRequired(),
