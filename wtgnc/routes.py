@@ -16,7 +16,8 @@ def home():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(user_first_name=form.user_first_name.data, user_last_name=form.user_last_name.data, display_name=form.display_name.data, email=form.email.data, password=form.password.data)
+        user = User(user_first_name=form.user_first_name.data, user_last_name=form.user_last_name.data, display_name=form.display_name.data, email=form.email.data)
+        user.set_pw(form.password.data)
         db.session.add(user)
         db.session.commit()
         flash(f'Account created for {form.display_name.data}!', 'success')

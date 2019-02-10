@@ -1,4 +1,4 @@
-from wtgnc import db
+from wtgnc import db, bcrypt
 from datetime import datetime
 
 # Create database models/classes
@@ -11,6 +11,14 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False, default='user')
     profile_image = db.Column(db.String(20), default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+
+    # Function to hash the password with bcrypt
+    def set_pw(self, password):
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    # Function to check the password hash with bcrypt
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)
 
     def __repr__(self):
         return f"User('{self.user_first_name}', '{self.user_last_name}', '{self.display_name}', " \
