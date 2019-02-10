@@ -8,7 +8,7 @@ class User(db.Model):
     user_last_name = db.Column(db.String(20), nullable=False)
     display_name = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    role = db.Column(db.String(20), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default='user')
     profile_image = db.Column(db.String(20), default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
 

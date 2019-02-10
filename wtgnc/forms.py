@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SubmitField, PasswordField, BooleanField, IntegerField, DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
-from wtgnc.data_vars import schedule_brief, make_list, entry_list_brief
+from wtgnc.models import User
+from wtgnc.data_vars import schedule_week_name, make_list, entry_list_brief
 
 # Create a registration form class
 class RegistrationForm(FlaskForm):
@@ -31,17 +32,17 @@ class RegistrationForm(FlaskForm):
         ])
     submit = SubmitField('Register')
 
-    # # Function to validate the unique username before submitting the form
-    # def validate_username(self, username):
-    #     user = Users.query.filter_by(username=username.data).first()
-    #     if user:
-    #         raise ValidationError('That username is taken, please choose another.')
-    #
-    # # Function to validate the unique username before submitting the form
-    # def validate_email(self, email):
-    #     user = Users.query.filter_by(email=email.data).first()
-    #     if user:
-    #         raise ValidationError('That email is taken, please choose another.')
+    # Function to validate the unique username before submitting the form
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('That username is taken, please choose another.')
+
+    # Function to validate the unique username before submitting the form
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('That email is taken, please choose another.')
 
 # Create a login form class
 class LoginForm(FlaskForm):
@@ -60,7 +61,7 @@ class WeekSelectionForm(FlaskForm):
     # Form field to choose the week to display data from
     week = SelectField('Choose the week from the drop down list', validators=[
         DataRequired()
-        ], choices=schedule_brief)
+        ], choices=schedule_week_name)
     submit = SubmitField('Set Week')
 
 # Custom validator to make sure picks are unique

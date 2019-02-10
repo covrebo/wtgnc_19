@@ -177,7 +177,9 @@ schedule_detailed = [
     }
 ]
 
-schedule_brief = [('Week ' + str(d['week']) + ' ' + d['track'], 'Week ' + str(d['week']) + ' ' + d['track']) for d in schedule_detailed]
+schedule_week_name = [('Week ' + str(d['week']) + ' ' + d['track'], 'Week ' + str(d['week']) + ' ' + d['track']) for d in schedule_detailed]
+
+schedule_week_num = [(str(d['week']), 'Week ' + str(d['week']) + ' ' + d['track']) for d in schedule_detailed]
 
 results = [
     {

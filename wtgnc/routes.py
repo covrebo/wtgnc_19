@@ -1,6 +1,7 @@
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect
 from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm
+from wtgnc.models import User
 
 # TEMP import of entry list from another file
 from wtgnc.data_vars import entry_list_detailed, picks
@@ -15,6 +16,9 @@ def home():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
+        user = User(user_first_name=form.user_first_name.data, user_last_name=form.user_last_name.data, display_name=form.display_name.data, email=form.email.data, password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
         flash(f'Account created for {form.display_name.data}!', 'success')
         return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
