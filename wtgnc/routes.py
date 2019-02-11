@@ -1,6 +1,6 @@
-from flask_login import login_user
+from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
-from flask import render_template, url_for, session, flash, redirect
+from flask import render_template, url_for, session, flash, redirect, request
 from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm
 from wtgnc.models import User, Driver, Event
 
@@ -17,6 +17,9 @@ def home():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        flash('You are already logged in.', 'info')
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(user_first_name=form.user_first_name.data, user_last_name=form.user_last_name.data, display_name=form.display_name.data, email=form.email.data)
@@ -29,27 +32,51 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        flash('You are already logged in.', 'info')
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
         # TODO: Does this protect against SQL injection?
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember.data)
-            flash(f"{session['display_name']} successfully logged in.", 'success')
-            return redirect(url_for('home'))
+            next_page = request.args.get('next')
+            flash(f"{current_user.display_name} successfully logged in.", 'success')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    if session.get('week_num') != None:
+        session.pop('week_num')
+    if session.get('week_name') != None:
+        session.pop('week_name')
+    flash('You have been logged out.')
+    return redirect(url_for('home'))
+
+
 # Route to the administration page
 @app.route('/admin')
-# TODO: add login requirement
+@login_required
 # TODO: require user role of admin to view
 def admin():
     return render_template('admin.html', title='Pool Admin')
 
+
+# Route to the user account page
+@app.route('/account')
+@login_required
+def account():
+    return render_template('account.html', title='Account')
+
+
 # Route to submit weekly driver roster
 @app.route('/pick-page', methods=['GET', 'POST'])
+@login_required
 def pick_page():
     # TODO add login requirement
     # TODO add modal to the page to confirm which week they are pick for
@@ -61,14 +88,14 @@ def pick_page():
     return render_template('pick-page.html', title='Pick Page', form=form)
 
 @app.route('/picks-summary')
-# TODO add login requirement
+@login_required
 # TODO: Allow users to update their picks if they are the ones that submitted them
 def picks_summary():
     return render_template('picks.html', title='Pick Summary', picks=picks)
 
 # Route to a set the session cookie to display the correct week
 @app.route('/site-selection', methods=['GET', 'POST'])
-# TODO add login requirement
+@login_required
 def week_selection():
     # Create a form to set the site value for the session
     form = WeekSelectionForm()
@@ -85,8 +112,8 @@ def week_selection():
 
 # Route to create a driver entry
 @app.route('/driver-entry', methods=['GET', 'POST'])
+@login_required
 def driver_entry():
-    # TODO add login requirement
     form = EntryForm()
     if form.validate_on_submit():
         driver = Driver(car_number=form.car_number.data, driver=form.driver.data, sponsor=form.sponsor.data, make=form.make.data, team=form.team.data)
@@ -100,6 +127,7 @@ def driver_entry():
 
 # Route to create a race entry
 @app.route('/race-event', methods=['GET', 'POST'])
+@login_required
 def race_event():
     # TODO add login requirement
     # TODO: Style the date selection field properly
