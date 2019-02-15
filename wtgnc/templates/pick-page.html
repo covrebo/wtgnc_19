@@ -50,6 +50,19 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
+                        {{ form.pick_4.label(class="form-control-label") }}
+                        {% if form.pick_4.errors %}
+                            {{ form.pick_4(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.pick_4.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.pick_4(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
                         {{ form.make.label(class="form-control-label") }}
                         {% if form.make.errors %}
                             {{ form.make(class="form-control is-invalid") }}

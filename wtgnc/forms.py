@@ -90,6 +90,9 @@ class PickSelectionForm(FlaskForm):
     pick_3 = SelectField('Choose a driver from the drop down list', validators=[
         DataRequired()
         ], choices=entry_list_brief)
+    pick_4 = SelectField('Choose a driver from the drop down list', validators=[
+        DataRequired()
+    ], choices=entry_list_brief)
     make = SelectField('Choose a manufacturer from the drop down list', validators=[
         DataRequired()
         ], choices=make_list)

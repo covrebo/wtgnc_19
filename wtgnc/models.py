@@ -65,6 +65,7 @@ class Pick(db.Model):
     driver_1 = db.Column(db.String(30), nullable=False)
     driver_2 = db.Column(db.String(30), nullable=False)
     driver_3 = db.Column(db.String(30), nullable=False)
+    driver_4 = db.Column(db.String(30), nullable=False)
     make = db.Column(db.String(10), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
