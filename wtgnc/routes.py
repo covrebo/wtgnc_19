@@ -1,8 +1,8 @@
 from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect, request
-from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm
-from wtgnc.models import User, Driver, Event, Pick
+from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm
+from wtgnc.models import User, Driver, Event, Pick, WeeklyResult
 
 
 @app.route('/')
@@ -173,6 +173,28 @@ def race_event():
 def schedule():
     schedule = Event.query.all()
     return render_template('schedule.html', title='Schedule', schedule=schedule)
+
+
+# Route to create a weekly result
+@app.route('/weekly-result-entry', methods=['GET', 'POST'])
+@login_required
+def weekly_result_entry():
+    form = WeeklyResultForm()
+    if form.validate_on_submit():
+        weekly_result = WeeklyResult(week=int(session['week_num']), user_id=int(form.user.data), rank=form.rank.data, points=form.points.data)
+        db.session.add(weekly_result)
+        db.session.commit()
+        flash("You have added a weekly result.", 'success')
+        # TODO: Redirect to weekly standings page instead of home
+        return redirect(url_for('home'))
+    return render_template('weekly-result-entry.html', title='Weekly Result Entry', legend='Create Result', form=form)
+
+
+# Route to show the weekly results
+@app.route('/weekly-results')
+def weekly_results():
+    weekly_results = WeeklyResult.query.filter_by(week=session['week_num']).order_by(WeeklyResult.rank).all()
+    return render_template('weekly-results.html', title='Weekly Results', weekly_results=weekly_results)
 
 
 # TODO add and admin page with links to register new users, enter schedule event, enter a driver entry, update a driver entry, enter results, enter/update weekly results, enter/update standings.

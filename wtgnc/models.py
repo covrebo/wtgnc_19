@@ -18,6 +18,8 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(20), nullable=False, default='user')
     profile_image = db.Column(db.String(20), default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+    weekly_result = db.relationship('WeeklyResult', backref='name', lazy='dynamic')
+    weekly_standing = db.relationship('WeeklyStanding', backref='name', lazy='dynamic')
 
     # Function to hash the password with bcrypt
     def set_pw(self, password):
@@ -84,6 +86,29 @@ class Result(db.Model):
 
     def __repr__(self):
         return f"Result('{self.week}', '{self.car_number}', '{self.driver}', '{self.points}')"
+
+
+class WeeklyResult(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    week = db.Column(db.Integer, db.ForeignKey('event.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    rank = db.Column(db.Integer, nullable=False)
+    points = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"Result('{self.week}', '{self.user_id}', '{self.rank}', '{self.points}')"
+
+
+class WeeklyStanding(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    week = db.Column(db.Integer, db.ForeignKey('event.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    rank = db.Column(db.Integer, nullable=False)
+    points = db.Column(db.Integer, nullable=False)
+    wins = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"Result('{self.week}', '{self.user_id}', '{self.user}', '{self.rank}', '{self.points}', '{self.wins}')"
 
 
 class Make(db.Model):

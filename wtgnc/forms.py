@@ -134,6 +134,7 @@ class EntryForm(FlaskForm):
     ])
     submit = SubmitField('Create Driver')
 
+
 # Form to schedule a race event
 class EventForm(FlaskForm):
     # Form field to choose the week to display data from
@@ -152,6 +153,27 @@ class EventForm(FlaskForm):
         DataRequired()
         ])
     submit = SubmitField('Create Event')
+
+
+def generate_user_list():
+    detailed_user_list = User.query.all()
+    user_list = [(str(user.id), user.display_name) for user in detailed_user_list]
+    return user_list
+
+
+# Form to enter a weekly pool result
+class WeeklyResultForm(FlaskForm):
+    # Form field to choose the week to display data from
+    user = SelectField(validators=[
+        DataRequired()
+    ], choices=generate_user_list())
+    points = IntegerField('Points', validators=[
+        DataRequired()
+    ])
+    rank = IntegerField('Rank', validators=[
+        DataRequired()
+    ])
+    submit = SubmitField('Submit Result')
 
 # TODO Form to enter weekly standings
 # TODO Form to enter weekly results

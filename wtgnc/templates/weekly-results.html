@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+    <body class="container col-md-8">
+        <h2 class="h2 text-center">Weekly Results</h2>
+        <table class="table">
+            <thead class="thead-light">
+                <tr class="text-center">
+                    <th scope="col">Rank</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Points</th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                {% for result in weekly_results %}
+                    <tr class="text-center">
+                        <td>{{ result.rank }}</td>
+                        <td>{{ result.name.display_name }}</td>
+                        <td>{{ result.points }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+{% endblock content %}
