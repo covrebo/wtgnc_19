@@ -1,72 +1,77 @@
 {% extends "layout.html" %}
 {% block content %}
-    <body class="container col-md-8">
-        <div class="row text-center">
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">View/Update Pool Members</a>
-            </div>
-            <div class="col-sm alert alert-primary m-1">
-                <a href="{{ url_for('register') }}" class="alert-link">Register Pool Member</a>
+    <body class="container col-md-9">
+        <div class="row">
+            <div class="col m-2 p-2">
+                <h3 class="h3 text-center">Pool Administration</h3>
             </div>
         </div>
         <div class="row text-center">
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">List/Update Schedule</a>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">View/Update Pool Members</a>
             </div>
-            <div class="col-sm alert alert-primary m-1">
-                <a href="{{ url_for('race_event') }}" class="alert-link">Create Race Event</a>
-            </div>
-        </div>
-        <div class="row text-center">
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">View/Update Entry List</a>
-            </div>
-            <div class="col-sm alert alert-primary m-1">
-                <a href="{{ url_for('driver_entry') }}" class="alert-link">Create Driver Entry</a>
-            </div>
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">Upload Entry List</a>
+            <div class="col-sm m-1">
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg btn-block" role="button">Register Pool Member</a>
             </div>
         </div>
         <div class="row text-center">
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">View/Update Weekly Results</a>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">List/Update Schedule</a>
             </div>
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">Enter Weekly Results</a>
-            </div>
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">Upload Weekly Results</a>
+            <div class="col-sm m-1">
+                <a href="{{ url_for('race_event') }}" class="btn btn-primary btn-lg btn-block" role="button">Create Race Event</a>
             </div>
         </div>
         <div class="row text-center">
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">View/Update Race Results</a>
+            <div class="col-sm m-1">
+                <a href="{{ url_for('entry_list') }}" class="btn btn-primary btn-lg btn-block" role="button">View/Update Entry List</a>
             </div>
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">Enter Race Results</a>
+            <div class="col-sm m-1">
+                <a href="{{ url_for('driver_entry') }}" class="btn btn-primary btn-lg btn-block" role="button">Create Driver Entry</a>
             </div>
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">Upload Race Results</a>
-            </div>
-        </div>
-        <div class="row text-center">
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">View/Update Standings</a>
-            </div>
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">Enter Standings</a>
-            </div>
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">Upload Standings</a>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Upload Entry List</a>
             </div>
         </div>
         <div class="row text-center">
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">View/Update Starting Lineup</a>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">View/Update Weekly Results</a>
             </div>
-            <div class="col-sm alert alert-secondary m-1">
-                <a href="#" class="alert-link">Upload Starting Lineup</a>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Enter Weekly Results</a>
+            </div>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Upload Weekly Results</a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">View/Update Race Results</a>
+            </div>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Enter Race Results</a>
+            </div>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Upload Race Results</a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">View/Update Standings</a>
+            </div>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Enter Standings</a>
+            </div>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Upload Standings</a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">View/Update Starting Lineup</a>
+            </div>
+            <div class="col-sm m-1">
+                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Upload Starting Lineup</a>
             </div>
         </div>
     </body>

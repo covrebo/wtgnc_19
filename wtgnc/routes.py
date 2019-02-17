@@ -5,15 +5,14 @@ from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSele
 from wtgnc.models import User, Driver, Event, Pick
 
 # TEMP import of entry list from another file
-from wtgnc.data_vars import picks, entry_list_brief, pick_list
+from wtgnc.data_vars import picks
 
 
 @app.route('/')
 @app.route('/home')
 def home():
     # TODO: List the standings on the home page
-    week = Event.query.filter_by(week_id=1).first()
-    return render_template('home.html', entry_list=entry_list_brief, week=week, pick_list=pick_list)
+    return render_template('home.html', title='Home')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -98,6 +97,7 @@ def pick_page():
 def picks_summary():
     return render_template('picks.html', title='Pick Summary', picks=picks)
 
+
 # Route to a set the session cookie to display the correct week
 @app.route('/site-selection', methods=['GET', 'POST'])
 @login_required
@@ -121,13 +121,19 @@ def week_selection():
 def driver_entry():
     form = EntryForm()
     if form.validate_on_submit():
-        driver = Driver(car_number=form.car_number.data, driver=form.driver.data, sponsor=form.sponsor.data, make=form.make.data, team=form.team.data)
+        driver = Driver(week=int(session['week_num']), car_number=form.car_number.data, driver=form.driver.data, sponsor=form.sponsor.data, make=form.make.data, team=form.team.data)
         db.session.add(driver)
         db.session.commit()
         flash(f"You have added {form.driver.data}.", 'success')
-        # TODO change redirect to pick summary page
-        return redirect(url_for('home'))
+        return redirect(url_for('entry_list'))
     return render_template('driver-entry.html', title='Driver Entry', legend='Create Driver', form=form)
+
+
+# Route to show the current entry list
+@app.route('/entry-list')
+def entry_list():
+    entry_list = Driver.query.order_by(Driver.car_number).all()
+    return render_template('entry-list.html', title='Entry List', entry_list=entry_list)
 
 
 # Route to create a race entry
