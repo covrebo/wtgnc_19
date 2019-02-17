@@ -1,9 +1,9 @@
 from wtgnc.models import Driver, Pick, Event
 
 # Create the entry list
-entry_list_detailed = Driver.query.all()
-
-entry_list_brief = [('#' + str(driver.car_number) + ' ' + driver.driver, '#' + str(driver.car_number) + ' ' + driver.driver) for driver in entry_list_detailed]
+# entry_list_detailed = Driver.query.all()
+#
+# entry_list_brief = [('#' + str(driver.car_number) + ' ' + driver.driver, '#' + str(driver.car_number) + ' ' + driver.driver) for driver in entry_list_detailed]
 
 #entry_list_brief = [(1, '#1 Kurt Busch'), (2, '#2 Brad Keselowski')]
 
@@ -109,7 +109,7 @@ results = [
     }
 ]
 
-pick_list = Pick.query.all()
+# pick_list = Pick.query.all()
 
 
 

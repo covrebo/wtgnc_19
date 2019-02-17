@@ -58,14 +58,6 @@ def logout():
     return redirect(url_for('home'))
 
 
-# Route to the administration page
-@app.route('/admin')
-@login_required
-# TODO: require user role of admin to view
-def admin():
-    return render_template('admin.html', title='Pool Admin')
-
-
 # Route to the user account page
 @app.route('/account')
 @login_required
@@ -91,6 +83,8 @@ def pick_page():
         return redirect(url_for('picks_summary'))
     return render_template('pick-page.html', title='Pick Page', form=form)
 
+
+# Route to display the weekly picks
 @app.route('/picks-summary')
 @login_required
 # TODO: Allow users to update their picks if they are the ones that submitted them
@@ -113,6 +107,14 @@ def week_selection():
         flash(f"You are now looking at picks and results from {str(session['week_name'])}.", 'success')
         return redirect(url_for('home'))
     return render_template('week-selection.html', title='Week Selection', form=form)
+
+
+# Route to the administration page
+@app.route('/admin')
+@login_required
+# TODO: require user role of admin to view
+def admin():
+    return render_template('admin.html', title='Pool Admin')
 
 
 # Route to create a driver entry
@@ -151,6 +153,13 @@ def race_event():
         # TODO change redirect to pick summary page
         return redirect(url_for('home'))
     return render_template('race-event.html', title='Race Event', legend='Create Race Event', form=form)
+
+# Route to show the current schedule
+@app.route('/schedule')
+def schedule():
+    schedule = Event.query.all()
+    return render_template('schedule.html', title='Schedule', schedule=schedule)
+
 
 # TODO add and admin page with links to register new users, enter schedule event, enter a driver entry, update a driver entry, enter results, enter/update weekly results, enter/update standings.
 # TODO add a route to submit races to the schedule

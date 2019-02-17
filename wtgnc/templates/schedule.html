@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+    <body class="container">
+        <div class="text-center">
+            <h2 class="h2 text-muted">Schedule</h2>
+        </div>
+        <table class="table">
+            <thead class="thead-light">
+                <tr class="text-center">
+                    <th scope="col">Week</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Track</th>
+                    <th scope="col">Race</th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                {% for event in schedule %}
+                        <tr class="text-center">
+                            <td>{{ event.week_id }}</td>
+                            <td>{{ event.date }}</td>
+                            <td>{{ event.track }}</td>
+                            <td>{{ event.race }}</td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+{% endblock content %}
