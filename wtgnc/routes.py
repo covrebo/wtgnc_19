@@ -11,6 +11,14 @@ def home():
     # TODO: List the standings on the home page
     return render_template('home.html', title='Home')
 
+
+# Route to the user account page
+@app.route('/about')
+@login_required
+def about():
+    return render_template('about.html', title='About')
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated and current_user.role != 'admin':
