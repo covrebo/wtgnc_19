@@ -4,9 +4,6 @@ from flask import render_template, url_for, session, flash, redirect, request
 from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm
 from wtgnc.models import User, Driver, Event, Pick
 
-# TEMP import of entry list from another file
-from wtgnc.data_vars import picks
-
 
 @app.route('/')
 @app.route('/home')
@@ -89,10 +86,11 @@ def pick_page():
 @login_required
 # TODO: Allow users to update their picks if they are the ones that submitted them
 def picks_summary():
+    picks = Pick.query.all()
     return render_template('picks.html', title='Pick Summary', picks=picks)
 
 
-# Route to a set the session cookie to display the correct week
+# Route to a set the session variable to display the correct week
 @app.route('/site-selection', methods=['GET', 'POST'])
 @login_required
 def week_selection():
@@ -153,6 +151,7 @@ def race_event():
         # TODO change redirect to pick summary page
         return redirect(url_for('home'))
     return render_template('race-event.html', title='Race Event', legend='Create Race Event', form=form)
+
 
 # Route to show the current schedule
 @app.route('/schedule')
