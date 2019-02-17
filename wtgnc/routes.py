@@ -2,10 +2,10 @@ from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect, request
 from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm
-from wtgnc.models import User, Driver, Event
+from wtgnc.models import User, Driver, Event, Pick
 
 # TEMP import of entry list from another file
-from wtgnc.data_vars import picks, entry_list_brief
+from wtgnc.data_vars import picks, entry_list_brief, pick_list
 
 
 @app.route('/')
@@ -13,12 +13,12 @@ from wtgnc.data_vars import picks, entry_list_brief
 def home():
     # TODO: List the standings on the home page
     week = Event.query.filter_by(week_id=1).first()
-    return render_template('home.html', entry_list=entry_list_brief, week=week)
+    return render_template('home.html', entry_list=entry_list_brief, week=week, pick_list=pick_list)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
-        flash('You are already logged in.', 'info')
+    if current_user.is_authenticated and current_user.role != 'admin':
+        flash('You are already logged in as a registered user.  Contact a commissioner to register a new account.', 'info')
         return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -82,9 +82,14 @@ def pick_page():
     # TODO add modal to the page to confirm which week they are pick for
     form = PickSelectionForm()
     if form.validate_on_submit():
-        flash(f"You have set your roster for {str(session['week'])}.", 'success')
+        picks = Pick(week=session['week_num'], display_name=current_user.display_name, driver_1=form.pick_1.data,
+                     driver_2=form.pick_2.data, driver_3=form.pick_3.data, driver_4=form.pick_4.data,
+                     make=form.make.data, user_id=current_user.id)
+        db.session.add(picks)
+        db.session.commit()
+        flash(f"You have submitted picks for {session['week_name']}.  Good Luck!", 'success')
         # TODO change redirect to pick summary page
-        return redirect(url_for('home'))
+        return redirect(url_for('picks_summary'))
     return render_template('pick-page.html', title='Pick Page', form=form)
 
 @app.route('/picks-summary')

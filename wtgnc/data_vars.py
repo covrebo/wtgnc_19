@@ -1,46 +1,50 @@
-from wtgnc.models import Driver
+from wtgnc.models import Driver, Pick, Event
 
 # Create the entry list
 entry_list_detailed = Driver.query.all()
 
-entry_list_brief = [(driver.car_number, '#' + str(driver.car_number) + ' ' + driver.driver) for driver in entry_list_detailed]
+entry_list_brief = [('#' + str(driver.car_number) + ' ' + driver.driver, '#' + str(driver.car_number) + ' ' + driver.driver) for driver in entry_list_detailed]
 
-schedule_detailed = [
-    {
-        'week': 1,
-        'track': 'Daytona',
-        'race': 'Daytona 500',
-        'date': '2019-02-17'
-    },
-    {
-        'week': 2,
-        'track': 'Atlanta',
-        'race': 'Folds of Honor QuikTrip 500',
-        'date': '2019-02-24'
-    },
-    {
-        'week': 3,
-        'track': 'Las Vegas',
-        'race': 'Pennzoil 400',
-        'date': '2019-03-03'
-    },
-    {
-        'week': 4,
-        'track': 'Phoenix',
-        'race': 'TicketGuardian 500',
-        'date': '2019-03-10'
-    },
-    {
-        'week': 5,
-        'track': 'California',
-        'race': 'Auto Club 400',
-        'date': '2019-03-17'
-    }
-]
+#entry_list_brief = [(1, '#1 Kurt Busch'), (2, '#2 Brad Keselowski')]
 
-schedule_week_name = [('Week ' + str(d['week']) + ' ' + d['track'], 'Week ' + str(d['week']) + ' ' + d['track']) for d in schedule_detailed]
+# # schedule_detailed = [
+#     {
+#         'week': 1,
+#         'track': 'Daytona',
+#         'race': 'Daytona 500',
+#         'date': '2019-02-17'
+#     },
+#     {
+#         'week': 2,
+#         'track': 'Atlanta',
+#         'race': 'Folds of Honor QuikTrip 500',
+#         'date': '2019-02-24'
+#     },
+#     {
+#         'week': 3,
+#         'track': 'Las Vegas',
+#         'race': 'Pennzoil 400',
+#         'date': '2019-03-03'
+#     },
+#     {
+#         'week': 4,
+#         'track': 'Phoenix',
+#         'race': 'TicketGuardian 500',
+#         'date': '2019-03-10'
+#     },
+#     {
+#         'week': 5,
+#         'track': 'California',
+#         'race': 'Auto Club 400',
+#         'date': '2019-03-17'
+#     }
+# ]
 
-schedule_week_num = [(str(d['week']), 'Week ' + str(d['week']) + ' ' + d['track']) for d in schedule_detailed]
+schedule_detailed = Event.query.all()
+
+schedule_week_name = [('Week ' + str(d.week_id) + ' ' + d.track, 'Week ' + str(d.week_id) + ' ' + d.track) for d in schedule_detailed]
+
+schedule_week_num = [(str(d.week_id), 'Week ' + str(d.week_id) + ' ' + d.track) for d in schedule_detailed]
 
 results = [
     {
@@ -104,6 +108,10 @@ results = [
         'points': 50
     }
 ]
+
+pick_list = Pick.query.all()
+
+
 
 picks = [
     {

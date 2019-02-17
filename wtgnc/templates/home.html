@@ -8,9 +8,12 @@
             <a class="btn btn-outline-info" href="{{ url_for('login') }}">Login Page</a>
             <a class="btn btn-outline-info" href="{{ url_for('pick_page') }}">Pick Page</a>
         </form>
-        {{ entry_list }}
-        {{ current_user.role }}
-        {{ session['week_num'] }}
-        {{ session['week_name'] }}
+        {{ entry_list }}</br>
+        {{ current_user.role }}</br>
+        {{ session['week_num'] }}</br>
+        {{ session['week_name'] }}</br>
+        {{ entry_list_brief }}</br>
+        {{ pick_list }}</br>
+        {{ pick_list['driver_1'] }}</br>
     </body>
 {% endblock content %}

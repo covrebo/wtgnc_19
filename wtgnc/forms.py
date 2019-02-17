@@ -1,8 +1,9 @@
+from flask import session
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SubmitField, PasswordField, BooleanField, IntegerField, DateField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo
-from wtgnc.models import User
-from wtgnc.data_vars import schedule_week_num, make_list, entry_list_brief
+from wtgnc.models import User, Driver, Make
+from wtgnc.data_vars import schedule_week_num, make_list
 
 # Create a registration form class
 class RegistrationForm(FlaskForm):
@@ -78,22 +79,34 @@ class WeekSelectionForm(FlaskForm):
 #     if pick_3.data == pick_2.data or pick_3.data == pick_2.data:
 #         raise ValidationError('Please pick three DIFFERENT drivers.')
 
+def generate_entry_list():
+    # TODO: Return an error if a week has not been selected
+    detailed_entry_list = Driver.query.order_by(Driver.car_number).all()
+    entry_list = [('#' + str(driver.car_number) + ' - ' + driver.driver, '#' + str(driver.car_number) + ' - ' + driver.driver) for driver in detailed_entry_list]
+    return entry_list
+
+def generate_make_list():
+    # TODO: Return an error if a week has not been selected
+    detailed_make_list = Make.query.all()
+    make_list = [(make.make, make.make) for make in detailed_make_list]
+    return make_list
+
 # Form to submit picks each week
 class PickSelectionForm(FlaskForm):
     # Form field to choose the week to display data from
-    pick_1 = SelectField('Choose a driver from the drop down list', validators=[
+    pick_1 = SelectField(validators=[
         DataRequired()
-        ], choices=entry_list_brief)
-    pick_2 = SelectField('Choose a driver from the drop down list', validators=[
+        ], choices=generate_entry_list())
+    pick_2 = SelectField(validators=[
         DataRequired()
-    ], choices=entry_list_brief)
-    pick_3 = SelectField('Choose a driver from the drop down list', validators=[
+    ], choices=generate_entry_list())
+    pick_3 = SelectField(validators=[
         DataRequired()
-        ], choices=entry_list_brief)
-    pick_4 = SelectField('Choose a driver from the drop down list', validators=[
+        ], choices=generate_entry_list())
+    pick_4 = SelectField(validators=[
         DataRequired()
-    ], choices=entry_list_brief)
-    make = SelectField('Choose a manufacturer from the drop down list', validators=[
+    ], choices=generate_entry_list())
+    make = SelectField(validators=[
         DataRequired()
         ], choices=make_list)
     submit = SubmitField('Set Roster')

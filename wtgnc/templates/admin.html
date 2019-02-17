@@ -1,15 +1,73 @@
 {% extends "layout.html" %}
 {% block content %}
-    <body class="container col-md-6">
-        <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action disabled">Update Pool Members</a>
-            <a href="{{ url_for('driver_entry') }}" class="list-group-item list-group-item-action">Create Driver Entry</a>
-            <a href="{{ url_for('race_event') }}" class="list-group-item list-group-item-action">Create Race Event</a>
-            <a href="#" class="list-group-item list-group-item-action">Upload Entry List</a>
-            <a href="#" class="list-group-item list-group-item-action">Upload Staring Lineup</a>
-            <a href="#" class="list-group-item list-group-item-action disabled">Upload Race Results</a>
-            <a href="#" class="list-group-item list-group-item-action disabled">Upload Weekly Pool Results</a>
-            <a href="#" class="list-group-item list-group-item-action disabled">Upload Pool Standings</a>
+    <body class="container col-md-8">
+        <div class="row text-center">
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">View/Update Pool Members</a>
+            </div>
+            <div class="col-sm alert alert-primary m-1">
+                <a href="{{ url_for('register') }}" class="alert-link">Register Pool Member</a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">List/Update Schedule</a>
+            </div>
+            <div class="col-sm alert alert-primary m-1">
+                <a href="{{ url_for('race_event') }}" class="alert-link">Create Race Event</a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">View/Update Entry List</a>
+            </div>
+            <div class="col-sm alert alert-primary m-1">
+                <a href="{{ url_for('driver_entry') }}" class="alert-link">Create Driver Entry</a>
+            </div>
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">Upload Entry List</a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">View/Update Weekly Results</a>
+            </div>
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">Enter Weekly Results</a>
+            </div>
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">Upload Weekly Results</a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">View/Update Race Results</a>
+            </div>
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">Enter Race Results</a>
+            </div>
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">Upload Race Results</a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">View/Update Standings</a>
+            </div>
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">Enter Standings</a>
+            </div>
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">Upload Standings</a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">View/Update Starting Lineup</a>
+            </div>
+            <div class="col-sm alert alert-secondary m-1">
+                <a href="#" class="alert-link">Upload Starting Lineup</a>
+            </div>
         </div>
     </body>
 {% endblock content %}
