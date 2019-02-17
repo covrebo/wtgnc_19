@@ -175,6 +175,24 @@ class WeeklyResultForm(FlaskForm):
     ])
     submit = SubmitField('Submit Result')
 
+
+# Form to enter a weekly pool standing
+class WeeklyStandingForm(FlaskForm):
+    # Form field to choose the week to display data from
+    user = SelectField(validators=[
+        DataRequired()
+    ], choices=generate_user_list())
+    points = IntegerField('Points', validators=[
+        DataRequired()
+    ])
+    rank = IntegerField('Rank', validators=[
+        DataRequired()
+    ])
+    wins = IntegerField('Wins', validators=[
+        DataRequired()
+    ])
+    submit = SubmitField('Submit Standing')
+
 # TODO Form to enter weekly standings
 # TODO Form to enter weekly results
 # TODO Form to enter weekly NASCAR results

@@ -15,16 +15,14 @@
             </thead>
             <tbody class="table-striped">
                 {% for pick in picks %}
-                    {% if pick.week == session['week_num'] %}
-                        <tr class="text-center">
-                            <td>{{ pick.display_name }}</td>
-                            <td>{{ pick.driver_1 }}</td>
-                            <td>{{ pick.driver_2 }}</td>
-                            <td>{{ pick.driver_3 }}</td>
-                            <td>{{ pick.driver_4 }}</td>
-                            <td>{{ pick.make }}</td>
-                        </tr>
-                    {% endif %}
+                    <tr class="text-center">
+                        <td>{{ pick.display_name }}</td>
+                        <td>{{ pick.driver_1 }}</td>
+                        <td>{{ pick.driver_2 }}</td>
+                        <td>{{ pick.driver_3 }}</td>
+                        <td>{{ pick.driver_4 }}</td>
+                        <td>{{ pick.make }}</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

@@ -1,8 +1,8 @@
 from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect, request
-from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm
-from wtgnc.models import User, Driver, Event, Pick, WeeklyResult
+from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm
+from wtgnc.models import User, Driver, Event, Pick, WeeklyResult, WeeklyStanding
 
 
 @app.route('/')
@@ -94,7 +94,7 @@ def pick_page():
 @login_required
 # TODO: Allow users to update their picks if they are the ones that submitted them
 def picks_summary():
-    picks = Pick.query.all()
+    picks = Pick.query.filter_by(week=session['week_num']).all()
     return render_template('picks.html', title='Pick Summary', picks=picks)
 
 
@@ -185,8 +185,7 @@ def weekly_result_entry():
         db.session.add(weekly_result)
         db.session.commit()
         flash("You have added a weekly result.", 'success')
-        # TODO: Redirect to weekly standings page instead of home
-        return redirect(url_for('home'))
+        return redirect(url_for('weekly_results'))
     return render_template('weekly-result-entry.html', title='Weekly Result Entry', legend='Create Result', form=form)
 
 
@@ -195,6 +194,28 @@ def weekly_result_entry():
 def weekly_results():
     weekly_results = WeeklyResult.query.filter_by(week=session['week_num']).order_by(WeeklyResult.rank).all()
     return render_template('weekly-results.html', title='Weekly Results', weekly_results=weekly_results)
+
+
+# Route to create a weekly standing
+@app.route('/standing-entry', methods=['GET', 'POST'])
+@login_required
+def standing_entry():
+    form = WeeklyStandingForm()
+    if form.validate_on_submit():
+        standing_entry = WeeklyStanding(week=int(session['week_num']), user_id=int(form.user.data), rank=form.rank.data, points=form.points.data, wins=form.wins.data)
+        db.session.add(standing_entry)
+        db.session.commit()
+        flash("You have added a weekly standing.", 'success')
+        # TODO: Redirect to weekly standings page instead of home
+        return redirect(url_for('home'))
+    return render_template('standings-entry.html', title='Weekly Standings Entry', legend='Create Standing', form=form)
+
+
+# Route to show the weekly results
+@app.route('/weekly-standings')
+def standings():
+    weekly_standings = WeeklyStanding.query.filter_by(week=session['week_num']).order_by(WeeklyStanding.rank).all()
+    return render_template('standings.html', title='Weekly Standings', weekly_standings=weekly_standings)
 
 
 # TODO add and admin page with links to register new users, enter schedule event, enter a driver entry, update a driver entry, enter results, enter/update weekly results, enter/update standings.
