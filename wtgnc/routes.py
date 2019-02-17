@@ -123,6 +123,13 @@ def admin():
     return render_template('admin.html', title='Pool Admin')
 
 
+# Route to show the current list of pool members
+@app.route('/member-list')
+def member_list():
+    user_list = User.query.order_by(User.user_last_name).all()
+    return render_template('members.html', title='Member List', user_list=user_list)
+
+
 # Route to create a driver entry
 @app.route('/driver-entry', methods=['GET', 'POST'])
 @login_required

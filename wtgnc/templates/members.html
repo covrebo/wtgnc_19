@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+    <body class="container">
+        <div class="text-center">
+            <h2 class="h2 text-muted">Pool Members</h2>
+        </div>
+        <table class="table">
+            <thead class="thead-light">
+                <tr class="text-center">
+                    <th scope="col">ID</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Display Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                {% for user in user_list %}
+                        <tr class="text-center">
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.user_first_name }}</td>
+                            <td>{{ user.user_last_name }}</td>
+                            <td>{{ user.display_name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role }}</td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+{% endblock content %}
