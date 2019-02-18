@@ -118,7 +118,6 @@ def account():
 @app.route('/pick-page', methods=['GET', 'POST'])
 @login_required
 def pick_page():
-    # TODO add login requirement
     # TODO add modal to the page to confirm which week they are pick for
     form = PickSelectionForm()
     if form.validate_on_submit():
@@ -128,7 +127,6 @@ def pick_page():
         db.session.add(picks)
         db.session.commit()
         flash(f"You have submitted picks for {session['week_name']}.  Good Luck!", 'success')
-        # TODO change redirect to pick summary page
         return redirect(url_for('picks_summary'))
     return render_template('pick-page.html', title='Pick Page', form=form)
 
@@ -162,9 +160,12 @@ def week_selection():
 # Route to the administration page
 @app.route('/admin')
 @login_required
-# TODO: require user role of admin to view
 def admin():
-    return render_template('admin.html', title='Pool Admin')
+    if current_user.role == 'admin':
+        return render_template('admin.html', title='Pool Admin')
+    else:
+        flash('You must be a commissioner to view the admin page!', 'warning')
+        return redirect(url_for('home'))
 
 
 # Route to show the current list of pool members
@@ -199,7 +200,6 @@ def entry_list():
 @app.route('/race-event', methods=['GET', 'POST'])
 @login_required
 def race_event():
-    # TODO add login requirement
     # TODO: Style the date selection field properly
     form = EventForm()
     if form.validate_on_submit():
@@ -250,7 +250,6 @@ def standing_entry():
         db.session.add(standing_entry)
         db.session.commit()
         flash("You have added a weekly standing.", 'success')
-        # TODO: Redirect to weekly standings page instead of home
         return redirect(url_for('standings'))
     return render_template('standings-entry.html', title='Weekly Standings Entry', legend='Create Standing', form=form)
 
@@ -263,4 +262,3 @@ def standings():
 
 
 # TODO add and admin page with links to register new users, enter schedule event, enter a driver entry, update a driver entry, enter results, enter/update weekly results, enter/update standings.
-# TODO add a route to submit races to the schedule
