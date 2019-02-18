@@ -1,4 +1,82 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>{{ current_user.display_name }}</h1>
+    <div class="content-section container col-md-8">
+        <div class="media">
+            <img src="{{ image_file }}" class="rounded-circle account-img m-2">
+            <div class="media-body">
+                <h2 class="account-heading m-1">{{ current_user.display_name }}</h2>
+                <p class="text-secondary m-1">{{ current_user.email }}</p>
+            </div>
+        </div>
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">{{ legend }}</legend>
+                <div class="form-group">
+                    {{ form.user_first_name.label(class="form-control-label", placeholder="First Name") }}
+                    {% if form.user_first_name.errors %}
+                        {{ form.user_first_name(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.user_first_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.user_first_name(class="form-control", placeholder="First Name") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.user_last_name.label(class="form-control-label") }}
+                    {% if form.user_last_name.errors %}
+                        {{ form.user_last_name(class="form-control is-invalid", placeholder="Last Name") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.user_last_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.user_last_name(class="form-control", placeholder="Last Name") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.display_name.label(class="form-control-label") }}
+                    {% if form.display_name.errors %}
+                        {{ form.display_name(class="form-control is-invalid", placeholder="Name displayed on the pick summary and results.") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.display_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.display_name(class="form-control", placeholder="Name displayed on the pick summary and results.") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control is-invalid", placeholder="Email") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control", placeholder="Email") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.picture.label(class="form-control-label") }}
+                    {{ form.picture(class="form-control-file") }}
+                    {% if form.picture.errors %}
+                        {% for error in form.picture.errors %}
+                            <span class="text-danger">{{ error }}</span></br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
 {% endblock content %}

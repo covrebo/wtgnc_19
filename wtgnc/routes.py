@@ -1,7 +1,10 @@
+import os
+import secrets
+from PIL import Image
 from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect, request
-from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm
+from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm
 from wtgnc.models import User, Driver, Event, Pick, WeeklyResult, WeeklyStanding
 
 
@@ -14,7 +17,6 @@ def home():
 
 # Route to the about page
 @app.route('/about')
-@login_required
 def about():
     return render_template('about.html', title='About')
 
@@ -26,6 +28,7 @@ def privacy_policy():
 
 
 @app.route('/register', methods=['GET', 'POST'])
+@login_required
 def register():
     if current_user.is_authenticated and current_user.role != 'admin':
         flash('You are already logged in as a registered user.  Contact a commissioner to register a new account.', 'info')
@@ -69,11 +72,46 @@ def logout():
     return redirect(url_for('home'))
 
 
+# Function to rename and save profile pictures
+def save_picture(form_picture):
+    # Rename file with random name to avoid filename collisions
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+    # Resize the image to 125x125 pixels
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    # Save the picture with a new name and return the filename so it can be updated in the database
+    i.save(picture_path)
+    return picture_fn
+
+
 # Route to the user account page
-@app.route('/account')
+@app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html', title='Account')
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.profile_image = picture_file
+            # TODO: delete old pictures from the file system
+        current_user.user_first_name = form.user_first_name.data
+        current_user.user_last_name = form.user_last_name.data
+        current_user.display_name = form.display_name.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash(f"Account information updated for {current_user.display_name}", 'success')
+        return redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.user_first_name.data = current_user.user_first_name
+        form.user_last_name.data = current_user.user_last_name
+        form.display_name.data = current_user.display_name
+        form.email.data = current_user.email
+    image_file = url_for('static', filename=f"profile_pics/{current_user.profile_image}")
+    return render_template('account.html', title='Account', legend='Account Info', image_file=image_file, form=form)
 
 
 # Route to submit weekly driver roster
