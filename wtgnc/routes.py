@@ -12,11 +12,17 @@ def home():
     return render_template('home.html', title='Home')
 
 
-# Route to the user account page
+# Route to the about page
 @app.route('/about')
 @login_required
 def about():
     return render_template('about.html', title='About')
+
+
+# Route to the privacy policy page
+@app.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy-policy.html', title='Privacy Policy')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -31,7 +37,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(f'Account created for {form.display_name.data}!', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -207,7 +213,7 @@ def standing_entry():
         db.session.commit()
         flash("You have added a weekly standing.", 'success')
         # TODO: Redirect to weekly standings page instead of home
-        return redirect(url_for('home'))
+        return redirect(url_for('standings'))
     return render_template('standings-entry.html', title='Weekly Standings Entry', legend='Create Standing', form=form)
 
 

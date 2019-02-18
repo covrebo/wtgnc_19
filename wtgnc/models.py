@@ -105,7 +105,7 @@ class WeeklyStanding(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     rank = db.Column(db.Integer, nullable=False)
     points = db.Column(db.Integer, nullable=False)
-    wins = db.Column(db.Integer, nullable=False)
+    wins = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return f"Result('{self.week}', '{self.user_id}', '{self.user}', '{self.rank}', '{self.points}', '{self.wins}')"

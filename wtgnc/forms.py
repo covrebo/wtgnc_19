@@ -188,9 +188,7 @@ class WeeklyStandingForm(FlaskForm):
     rank = IntegerField('Rank', validators=[
         DataRequired()
     ])
-    wins = IntegerField('Wins', validators=[
-        DataRequired()
-    ])
+    wins = IntegerField('Wins')
     submit = SubmitField('Submit Standing')
 
 # TODO Form to enter weekly standings
