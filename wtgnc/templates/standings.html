@@ -15,7 +15,7 @@
                 {% for result in weekly_standings %}
                     <tr class="text-center">
                         <td>{{ result.rank }}</td>
-                        <td>{{ result.name.display_name }}</td>
+                        <td><a href="{{ url_for('view_weekly_standing', weekly_standing_id=result.id) }}">{{ result.name.display_name }}</a></td>
                         <td>{{ result.points }}</td>
                         <td>{{ result.wins }}</td>
                     </tr>

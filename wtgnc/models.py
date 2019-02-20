@@ -42,6 +42,7 @@ class Event(db.Model):
     race = db.Column(db.String(30), nullable=False)
     date = db.Column(db.Date, nullable=False)
     weekly_result = db.relationship('WeeklyResult', backref='week_result', lazy='dynamic')
+    weekly_standing = db.relationship('WeeklyStanding', backref='week_standing', lazy='dynamic')
 
     def __repr__(self):
         return f"Event('{self.week_str}', '{self.track}', '{self.race}', '{self.date}')"

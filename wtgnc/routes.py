@@ -4,7 +4,7 @@ from PIL import Image
 from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect, request, abort
-from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm, WeeklyResultUpdateForm
+from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm, WeeklyResultUpdateForm, WeeklyStandingUpdateForm
 from wtgnc.models import User, Driver, Event, Pick, WeeklyResult, WeeklyStanding
 
 
@@ -392,6 +392,49 @@ def standing_entry():
         flash("You have added a weekly standing.", 'success')
         return redirect(url_for('standings'))
     return render_template('standings-entry.html', title='Weekly Standings Entry', legend='Create Standing', form=form)
+
+
+# Route to view a weekly standing
+@app.route('/weekly-standing/<int:weekly_standing_id>', methods=['GET', 'POST'])
+@login_required
+def view_weekly_standing(weekly_standing_id):
+    weekly_standing = WeeklyStanding.query.get_or_404(weekly_standing_id)
+    return render_template('weekly-standing-view.html', title='Standing Summary', weekly_standing=weekly_standing)
+
+
+# Route to update a weekly standing
+@app.route('/weekly-standing/<int:weekly_standing_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_weekly_standing(weekly_standing_id):
+    weekly_standing = WeeklyStanding.query.get_or_404(weekly_standing_id)
+    if current_user.role != 'admin':
+        abort(403)
+    form = WeeklyStandingUpdateForm()
+    if form.validate_on_submit():
+        weekly_standing.rank = form.rank.data
+        weekly_standing.points = form.points.data
+        weekly_standing.wins = form.wins.data
+        db.session.commit()
+        flash(f"Standings have been updated", 'success')
+        return redirect(url_for('standings'))
+    elif request.method == 'GET':
+        form.rank.data = weekly_standing.rank
+        form.points.data = weekly_standing.points
+        form.wins.data = weekly_standing.wins
+    return render_template('weekly-standing-update.html', title='Update Weekly Standing', legend='Update Standing', form=form, weekly_standing=weekly_standing)
+
+
+# Route to delete a weekly standing
+@app.route('/weekly-standing/<int:weekly_standing_id>/delete', methods=['POST'])
+@login_required
+def delete_weekly_standing(weekly_standing_id):
+    weekly_standing = WeeklyStanding.query.get_or_404(weekly_standing_id)
+    if current_user.role != 'admin':
+        abort(403)
+    db.session.delete(weekly_standing)
+    db.session.commit()
+    flash(f"Standing has been deleted", 'success')
+    return redirect(url_for('standings'))
 
 
 # Route to show the weekly results
