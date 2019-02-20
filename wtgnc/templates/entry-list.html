@@ -2,7 +2,6 @@
 {% block content %}
     <body class="container">
         <div class="text-center">
-            <h1 class="h1">{{ session['week'] }}</h1>
             <h2 class="h2 text-muted">Entry List</h2>
         </div>
         <table class="table">
@@ -17,15 +16,46 @@
             </thead>
             <tbody class="table-striped">
                 {% for driver in entry_list %}
-                        <tr class="text-center">
-                            <td>{{ driver.car_number }}</td>
-                            <td>{{ driver.driver }}</td>
-                            <td>{{ driver.sponsor }}</td>
-                            <td>{{ driver.team }}</td>
-                            <td>{{ driver.make }}</td>
-                        </tr>
+                        {% if driver.active == True %}
+                            <tr class="text-center">
+                                <td>{{ driver.car_number }}</td>
+                                <td><a href="{{ url_for('driver', driver_id=driver.id) }}">{{ driver.driver }}</a></td>
+                                <td>{{ driver.sponsor }}</td>
+                                <td>{{ driver.team }}</td>
+                                <td>{{ driver.make }}</td>
+                            </tr>
+                        {% endif %}
                 {% endfor %}
             </tbody>
         </table>
+        {% if current_user.role == 'admin' %}
+            <div class="text-center">
+                <h2 class="h2 text-muted">Inactive Drivers</h2>
+            </div>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr class="text-center">
+                        <th scope="col">Car</th>
+                        <th scope="col">Driver</th>
+                        <th scope="col">Sponsor</th>
+                        <th scope="col">Team</th>
+                        <th scope="col">Manufacturer</th>
+                    </tr>
+                </thead>
+                <tbody class="table-striped">
+                    {% for driver in entry_list %}
+                            {% if driver.active == False %}
+                                <tr class="text-center">
+                                    <td>{{ driver.car_number }}</td>
+                                    <td><a href="{{ url_for('driver', driver_id=driver.id) }}">{{ driver.driver }}</a></td>
+                                    <td>{{ driver.sponsor }}</td>
+                                    <td>{{ driver.team }}</td>
+                                    <td>{{ driver.make }}</td>
+                                </tr>
+                            {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     </body>
 {% endblock content %}

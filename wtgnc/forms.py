@@ -123,7 +123,7 @@ class WeekSelectionForm(FlaskForm):
 
 def generate_entry_list():
     # TODO: Return an error if a week has not been selected
-    detailed_entry_list = Driver.query.order_by(Driver.car_number).all()
+    detailed_entry_list = Driver.query.filter_by(active=True).order_by(Driver.car_number).all()
     entry_list = [('#' + str(driver.car_number) + ' - ' + driver.driver, '#' + str(driver.car_number) + ' - ' + driver.driver) for driver in detailed_entry_list]
     return entry_list
 
@@ -174,7 +174,8 @@ class EntryForm(FlaskForm):
         DataRequired(),
         Length(min=2, max=50)
     ])
-    submit = SubmitField('Create Driver')
+    active = BooleanField('Active', default='checked')
+    submit = SubmitField('Submit')
 
 
 # Form to schedule a race event

@@ -54,6 +54,7 @@ class Driver(db.Model):
     sponsor = db.Column(db.String(30), nullable=False)
     make = db.Column(db.String(10), nullable=False)
     team = db.Column(db.String(30), nullable=False)
+    active = db.Column(db.Boolean, nullable=False, default=True)
 
     def __repr__(self):
         return f"Driver('{self.car_number}', '{self.driver}', '{self.sponsor}'," \

@@ -2,10 +2,6 @@
 {% block content %}
     <body class="container col-md-6">
         <div class="content-section">
-            <div class="text-center">
-                <h1 class="h1">{{ session['week'] }}</h1>
-                <img class="mb-4" src="static/images/trophy_512.png" alt="" width="72" height="72">
-            </div>
             <form method="POST" action="">
                 {{ form.hidden_tag() }}
                 <fieldset class="form-group">
@@ -73,6 +69,19 @@
                             </div>
                         {% else %}
                             {{ form.team(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.active.label(class="form-control-label") }}
+                        {% if form.active.errors %}
+                            {{ form.active(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.active.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.active(class="form-control") }}
                         {% endif %}
                     </div>
                 </fieldset>

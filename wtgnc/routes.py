@@ -3,7 +3,7 @@ import secrets
 from PIL import Image
 from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
-from flask import render_template, url_for, session, flash, redirect, request
+from flask import render_template, url_for, session, flash, redirect, request, abort
 from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm
 from wtgnc.models import User, Driver, Event, Pick, WeeklyResult, WeeklyStanding
 
@@ -92,6 +92,8 @@ def save_picture(form_picture):
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
+    # TODO: Add a weekly pick, result, and standings summary for each account
+    # TODO: Add driver popularity and other stats to account summary
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
@@ -187,6 +189,57 @@ def driver_entry():
         flash(f"You have added {form.driver.data}.", 'success')
         return redirect(url_for('entry_list'))
     return render_template('driver-entry.html', title='Driver Entry', legend='Create Driver', form=form)
+
+
+# Route to view a driver entry
+@app.route('/driver/<int:driver_id>', methods=['GET', 'POST'])
+@login_required
+def driver(driver_id):
+    # TODO: Add a performance summary for each race to the driver page
+    # TODO: Add an popularity measure, average start, average finish, average stage points, and average total points stat to each driver.
+    driver = Driver.query.get_or_404(driver_id)
+    return render_template('driver.html', title='Driver Summary', driver=driver)
+
+
+# Route to update a driver entry
+@app.route('/driver/<int:driver_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_driver(driver_id):
+    driver = Driver.query.get_or_404(driver_id)
+    if current_user.role != 'admin':
+        abort(403)
+    form = EntryForm()
+    if form.validate_on_submit():
+        driver.car_number = form.car_number.data
+        driver.driver = form.driver.data
+        driver.sponsor = form.sponsor.data
+        driver.make = form.make.data
+        driver.team = form.team.data
+        driver.active = form.active.data
+        db.session.commit()
+        flash(f"Driver information updated for {form.driver.data}", 'success')
+        return redirect(url_for('entry_list'))
+    elif request.method == 'GET':
+        form.car_number.data = driver.car_number
+        form.driver.data = driver.driver
+        form.sponsor.data = driver.sponsor
+        form.make.data = driver.make
+        form.team.data = driver.team
+        form.active.data = driver.active
+    return render_template('driver-entry.html', title='Driver Update', legend='Update Driver', form=form)
+
+
+# Route to delete a driver entry
+@app.route('/driver/<int:driver_id>/delete', methods=['POST'])
+@login_required
+def delete_driver(driver_id):
+    driver = Driver.query.get_or_404(driver_id)
+    if current_user.role != 'admin':
+        abort(403)
+    db.session.delete(driver)
+    db.session.commit()
+    flash(f"Driver has been deleted", 'success')
+    return redirect(url_for('entry_list'))
 
 
 # Route to show the current entry list
