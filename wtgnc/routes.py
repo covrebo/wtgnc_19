@@ -265,6 +265,51 @@ def race_event():
     return render_template('race-event.html', title='Race Event', legend='Create Race Event', form=form)
 
 
+# Route to view a race entry
+@app.route('/race/<int:race_id>', methods=['GET', 'POST'])
+@login_required
+def race(race_id):
+    race = Event.query.get_or_404(race_id)
+    return render_template('race.html', title='Race Summary', race=race)
+
+
+# Route to update a race entry
+@app.route('/race/<int:race_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_race(race_id):
+    race = Event.query.get_or_404(race_id)
+    if current_user.role != 'admin':
+        abort(403)
+    form = EventForm()
+    if form.validate_on_submit():
+        race.week_id = form.week.data
+        race.week_str = f"Week {form.week.data} - {form.track.data}"
+        race.track = form.track.data
+        race.race = form.race.data
+        race.date = form.date.data
+        db.session.commit()
+        flash(f"Race information updated for the {form.race.data}", 'success')
+        return redirect(url_for('schedule'))
+    elif request.method == 'GET':
+        form.week.data = race.week_id
+        form.track.data = race.track
+        form.race.data = race.race
+        form.date.data = race.date
+    return render_template('race-event.html', title='Race Update', legend='Update Race', form=form)
+
+
+# Route to delete a driver entry
+@app.route('/race/<int:race_id>/delete', methods=['POST'])
+@login_required
+def delete_race(race_id):
+    race = Event.query.get_or_404(race_id)
+    if current_user.role != 'admin':
+        abort(403)
+    db.session.delete(race)
+    db.session.commit()
+    flash(f"Race has been deleted", 'success')
+    return redirect(url_for('schedule'))
+
 # Route to show the current schedule
 @app.route('/schedule')
 def schedule():

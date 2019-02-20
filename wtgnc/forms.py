@@ -195,7 +195,7 @@ class EventForm(FlaskForm):
     date = DateField(format='%m-%d-%Y', validators=[
         DataRequired()
         ])
-    submit = SubmitField('Create Event')
+    submit = SubmitField('Submit')
 
 
 def generate_user_list():
