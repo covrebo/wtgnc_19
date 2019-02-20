@@ -4,7 +4,7 @@ from PIL import Image
 from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect, request, abort
-from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm
+from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm, WeeklyResultUpdateForm
 from wtgnc.models import User, Driver, Event, Pick, WeeklyResult, WeeklyStanding
 
 
@@ -298,7 +298,7 @@ def update_race(race_id):
     return render_template('race-event.html', title='Race Update', legend='Update Race', form=form)
 
 
-# Route to delete a driver entry
+# Route to delete a race entry
 @app.route('/race/<int:race_id>/delete', methods=['POST'])
 @login_required
 def delete_race(race_id):
@@ -309,6 +309,7 @@ def delete_race(race_id):
     db.session.commit()
     flash(f"Race has been deleted", 'success')
     return redirect(url_for('schedule'))
+
 
 # Route to show the current schedule
 @app.route('/schedule')
@@ -329,6 +330,47 @@ def weekly_result_entry():
         flash("You have added a weekly result.", 'success')
         return redirect(url_for('weekly_results'))
     return render_template('weekly-result-entry.html', title='Weekly Result Entry', legend='Create Result', form=form)
+
+
+# Route to view a weekly result
+@app.route('/weekly-result/<int:weekly_result_id>', methods=['GET', 'POST'])
+@login_required
+def view_weekly_result(weekly_result_id):
+    weekly_result = WeeklyResult.query.get_or_404(weekly_result_id)
+    return render_template('weekly-result-view.html', title='Result Summary', weekly_result=weekly_result)
+
+
+# Route to update a weekly result
+@app.route('/weekly-result/<int:weekly_result_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_weekly_result(weekly_result_id):
+    weekly_result = WeeklyResult.query.get_or_404(weekly_result_id)
+    if current_user.role != 'admin':
+        abort(403)
+    form = WeeklyResultUpdateForm()
+    if form.validate_on_submit():
+        weekly_result.rank = form.rank.data
+        weekly_result.points = form.points.data
+        db.session.commit()
+        flash(f"Results have been updated", 'success')
+        return redirect(url_for('weekly_results'))
+    elif request.method == 'GET':
+        form.rank.data = weekly_result.rank
+        form.points.data = weekly_result.points
+    return render_template('weekly-result-update.html', title='Update Weekly Result', legend='Update Result', form=form, weekly_result=weekly_result)
+
+
+# Route to delete a weekly result
+@app.route('/weekly-result/<int:weekly_result_id>/delete', methods=['POST'])
+@login_required
+def delete_weekly_result(weekly_result_id):
+    weekly_result = WeeklyResult.query.get_or_404(weekly_result_id)
+    if current_user.role != 'admin':
+        abort(403)
+    db.session.delete(weekly_result)
+    db.session.commit()
+    flash(f"Result has been deleted", 'success')
+    return redirect(url_for('weekly_results'))
 
 
 # Route to show the weekly results

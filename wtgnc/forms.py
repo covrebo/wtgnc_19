@@ -219,6 +219,18 @@ class WeeklyResultForm(FlaskForm):
     submit = SubmitField('Submit Result')
 
 
+# Form to update a weekly pool result
+class WeeklyResultUpdateForm(FlaskForm):
+    # Form field to choose the week to display data from
+    points = IntegerField('Points', validators=[
+        DataRequired()
+    ])
+    rank = IntegerField('Rank', validators=[
+        DataRequired()
+    ])
+    submit = SubmitField('Submit Result')
+
+
 # Form to enter a weekly pool standing
 class WeeklyStandingForm(FlaskForm):
     # Form field to choose the week to display data from
