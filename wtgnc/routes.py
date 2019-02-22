@@ -1,10 +1,12 @@
 import os
 import secrets
+import csv
 from PIL import Image
 from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect, request, abort
 from werkzeug.utils import secure_filename
+from io import TextIOWrapper
 from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm, WeeklyResultUpdateForm, WeeklyStandingUpdateForm, UploadEntryListForm
 from wtgnc.models import User, Driver, Event, Pick, WeeklyResult, WeeklyStanding
 
@@ -146,7 +148,7 @@ def picks_summary():
 
 
 # Route to a set the session variable to display the correct week
-@app.route('/site-selection', methods=['GET', 'POST'])
+@app.route('/week-selection', methods=['GET', 'POST'])
 @login_required
 def week_selection():
     # Create a form to set the site value for the session
@@ -157,6 +159,7 @@ def week_selection():
         week = Event.query.filter_by(week_id=form.week.data).first()
         session['week_num'] = week.week_id
         session['week_name'] = week.week_str
+        session['week_key'] = week.id
         flash(f"You are now looking at picks and results from {str(session['week_name'])}.", 'success')
         return redirect(url_for('home'))
     return render_template('week-selection.html', title='Week Selection', form=form)
@@ -452,26 +455,23 @@ def standings():
 @login_required
 def entry_list_upload():
     form = UploadEntryListForm()
+    # Upload the file to uploads folder
     if form.validate_on_submit():
         if form.entry_list_upload.data:
             file = form.entry_list_upload.data
             f_name = secure_filename(file.filename)
-            file.save(os.path.join(app.root_path, 'static/uploads', f_name))
+            f_path = os.path.join(app.root_path, 'static/uploads', f_name)
+            file.save(f_path)
+            file = open(f_path, "r", encoding="utf-8")
+            csv_reader = csv.reader(file, delimiter=',')
+            # Skip the headers
+            next(csv_reader)
+            for row in csv_reader:
+                entry = Driver(week=int(session['week_key']), car_number=int(row[0]), driver=row[1], sponsor=row[2], make=row[3], team=row[4])
+                db.session.add(entry)
+                db.session.commit()
             flash('You have successfully uploaded the entry list', 'success')
             return redirect(url_for('entry_list'))
-    #     current_user.user_first_name = form.user_first_name.data
-    #     current_user.user_last_name = form.user_last_name.data
-    #     current_user.display_name = form.display_name.data
-    #     current_user.email = form.email.data
-    #     db.session.commit()
-    #     flash(f"Account information updated for {current_user.display_name}", 'success')
-    #     return redirect(url_for('account'))
-    # elif request.method == 'GET':
-    #     form.user_first_name.data = current_user.user_first_name
-    #     form.user_last_name.data = current_user.user_last_name
-    #     form.display_name.data = current_user.display_name
-    #     form.email.data = current_user.email
-    # image_file = url_for('static', filename=f"profile_pics/{current_user.profile_image}")
     else:
         return render_template('upload-entry-list.html', title='Upload Entry List', legend='Upload Entry List', form=form)
 
