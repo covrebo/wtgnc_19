@@ -259,7 +259,14 @@ class WeeklyStandingUpdateForm(FlaskForm):
     wins = IntegerField('Wins')
     submit = SubmitField('Submit Standing')
 
-# TODO Form to enter weekly standings
-# TODO Form to enter weekly results
+
+# Create a form to upload race entry list csv
+class UploadEntryListForm(FlaskForm):
+    entry_list_upload = FileField('Upload Entry List', validators=[
+        FileAllowed(['csv'])
+    ])
+    submit = SubmitField('Upload File')
+
+
 # TODO Form to enter weekly NASCAR results
 # TODO Form to enter weekly NASCAR standings

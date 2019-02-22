@@ -4,8 +4,11 @@ from PIL import Image
 from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect, request, abort
-from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm, WeeklyResultUpdateForm, WeeklyStandingUpdateForm
+from werkzeug.utils import secure_filename
+from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm, WeeklyResultUpdateForm, WeeklyStandingUpdateForm, UploadEntryListForm
 from wtgnc.models import User, Driver, Event, Pick, WeeklyResult, WeeklyStanding
+
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static/uploads')
 
 
 @app.route('/')
@@ -442,6 +445,35 @@ def delete_weekly_standing(weekly_standing_id):
 def standings():
     weekly_standings = WeeklyStanding.query.filter_by(week=session['week_num']).order_by(WeeklyStanding.rank).all()
     return render_template('standings.html', title='Weekly Standings', weekly_standings=weekly_standings)
+
+
+# Route to upload an entry list csv
+@app.route('/upload-entry-list', methods=['GET', 'POST'])
+@login_required
+def entry_list_upload():
+    form = UploadEntryListForm()
+    if form.validate_on_submit():
+        if form.entry_list_upload.data:
+            file = form.entry_list_upload.data
+            f_name = secure_filename(file.filename)
+            file.save(os.path.join(app.root_path, 'static/uploads', f_name))
+            flash('You have successfully uploaded the entry list', 'success')
+            return redirect(url_for('entry_list'))
+    #     current_user.user_first_name = form.user_first_name.data
+    #     current_user.user_last_name = form.user_last_name.data
+    #     current_user.display_name = form.display_name.data
+    #     current_user.email = form.email.data
+    #     db.session.commit()
+    #     flash(f"Account information updated for {current_user.display_name}", 'success')
+    #     return redirect(url_for('account'))
+    # elif request.method == 'GET':
+    #     form.user_first_name.data = current_user.user_first_name
+    #     form.user_last_name.data = current_user.user_last_name
+    #     form.display_name.data = current_user.display_name
+    #     form.email.data = current_user.email
+    # image_file = url_for('static', filename=f"profile_pics/{current_user.profile_image}")
+    else:
+        return render_template('upload-entry-list.html', title='Upload Entry List', legend='Upload Entry List', form=form)
 
 
 # TODO add and admin page with links to register new users, enter schedule event, enter a driver entry, update a driver entry, enter results, enter/update weekly results, enter/update standings.
