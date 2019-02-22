@@ -6,10 +6,10 @@
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">{{ legend }}</legend>
                 <div class="form-group">
-                    {{ form.entry_list_upload.label(class="form-control-label") }}
-                    {{ form.entry_list_upload(class="form-control-file") }}
-                    {% if form.entry_list_upload.errors %}
-                        {% for error in form.entry_list_upload.errors %}
+                    {{ form.upload.label(class="form-control-label") }}
+                    {{ form.upload(class="form-control-file") }}
+                    {% if form.upload.errors %}
+                        {% for error in form.upload.errors %}
                             <span class="text-danger">{{ error }}</span></br>
                         {% endfor %}
                     {% endif %}

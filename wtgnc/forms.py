@@ -121,12 +121,13 @@ class WeekSelectionForm(FlaskForm):
 #     if pick_3.data == pick_2.data or pick_3.data == pick_2.data:
 #         raise ValidationError('Please pick three DIFFERENT drivers.')
 
+# TODO: Dynamically update by moving to routes file https://stackoverflow.com/questions/46921823/dynamic-choices-wtforms-flask-selectfield
 def generate_entry_list():
     # TODO: Return an error if a week has not been selected
     detailed_entry_list = Driver.query.filter_by(active=True).order_by(Driver.car_number).all()
     entry_list = [('#' + str(driver.car_number) + ' - ' + driver.driver, '#' + str(driver.car_number) + ' - ' + driver.driver) for driver in detailed_entry_list]
     return entry_list
-
+# TODO: Dynamically update by moving to routes file https://stackoverflow.com/questions/46921823/dynamic-choices-wtforms-flask-selectfield
 def generate_make_list():
     # TODO: Return an error if a week has not been selected
     detailed_make_list = Make.query.all()
@@ -197,7 +198,7 @@ class EventForm(FlaskForm):
         ])
     submit = SubmitField('Submit')
 
-
+# TODO: Dynamically update by moving to routes file https://stackoverflow.com/questions/46921823/dynamic-choices-wtforms-flask-selectfield
 def generate_user_list():
     detailed_user_list = User.query.all()
     user_list = [(str(user.id), user.display_name) for user in detailed_user_list]
@@ -261,8 +262,8 @@ class WeeklyStandingUpdateForm(FlaskForm):
 
 
 # Create a form to upload race entry list csv
-class UploadEntryListForm(FlaskForm):
-    entry_list_upload = FileField('Upload Entry List', validators=[
+class UploadForm(FlaskForm):
+    upload = FileField('Upload Entry List', validators=[
         FileAllowed(['csv'])
     ])
     submit = SubmitField('Upload File')

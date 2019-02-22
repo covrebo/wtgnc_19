@@ -83,12 +83,30 @@ class Pick(db.Model):
 class Result(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     week = db.Column(db.Integer, db.ForeignKey('event.id'))
-    car_number = db.Column(db.Integer, nullable=False)
+    finish_position = db.Column(db.Integer, nullable=False)
     driver = db.Column(db.String(30), nullable=False)
+    car_number = db.Column(db.Integer, nullable=False)
+    make = db.Column(db.String(10), nullable=False)
+    laps = db.Column(db.Integer, nullable=False)
+    start_position = db.Column(db.Integer, nullable=False)
+    laps_led = db.Column(db.Integer, nullable=False)
     points = db.Column(db.Integer, nullable=False)
+    bonus_points = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return f"Result('{self.week}', '{self.car_number}', '{self.driver}', '{self.points}')"
+
+
+class StartingLineup(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    week = db.Column(db.Integer, db.ForeignKey('event.id'))
+    position = db.Column(db.Integer, nullable=False)
+    car_number = db.Column(db.Integer, nullable=False)
+    driver = db.Column(db.String(30), nullable=False)
+    team = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        return f"Result('{self.week}', '{self.position}', '{self.car_number}', '{self.driver}')"
 
 
 class WeeklyResult(db.Model):
