@@ -201,6 +201,7 @@ def entry_list_upload():
                 entry = Driver(week=int(session['week_key']), car_number=int(row[0]), driver=row[1], sponsor=row[2], make=row[3], team=row[4])
                 db.session.add(entry)
                 db.session.commit()
+            # Delete the file
             if os.path.exists(f_path):
                 os.remove(f_path)
             flash('You have successfully uploaded the entry list', 'success')
@@ -497,6 +498,7 @@ def starting_lineup_upload():
                 entry = StartingLineup(week=int(session['week_key']), position=int(row[0]), car_number=int(row[1]), driver=row[2], team=row[3])
                 db.session.add(entry)
                 db.session.commit()
+            # Delete the file
             if os.path.exists(f_path):
                 os.remove(f_path)
             flash(f"You have successfully uploaded the starting lineup for {session['week_name']}", 'success')
@@ -511,6 +513,44 @@ def starting_lineup():
     # TODO: Add a route to view and update an individual starting lineup entry
     starting_lineup = StartingLineup.query.filter_by(week=session['week_key']).order_by(StartingLineup.position).all()
     return render_template('starting-lineup.html', title='Starting Lineup', starting_lineup=starting_lineup)
+
+
+# Route to upload a race results csv
+@app.route('/upload-race-results', methods=['GET', 'POST'])
+@login_required
+def race_results_upload():
+    form = UploadForm()
+    # Upload the file to uploads folder
+    if form.validate_on_submit():
+        if form.upload.data:
+            file = form.upload.data
+            f_name = secure_filename(file.filename)
+            f_path = os.path.join(app.root_path, 'static/uploads', f_name)
+            file.save(f_path)
+            file = open(f_path, "r", encoding="utf-8")
+            csv_reader = csv.reader(file, delimiter=',')
+            # Skip the headers
+            next(csv_reader)
+            for row in csv_reader:
+                # TODO: Add check for correct data in each field
+                entry = Result(week=int(session['week_key']), finish_position=int(row[0]), driver=row[1], car_number=int(row[2]), make=row[3], laps=int(row[4]), start_position=int(row[5]), laps_led=int(row[6]), points=int(row[7]), bonus_points=int(row[8]))
+                db.session.add(entry)
+                db.session.commit()
+            # Delete the file
+            if os.path.exists(f_path):
+                os.remove(f_path)
+            flash(f"You have successfully uploaded the race results for {session['week_name']}", 'success')
+            return redirect(url_for('home'))
+    else:
+        return render_template('upload-file.html', title='Upload Race Results', legend='Upload Race Results', form=form)
+
+
+# Route to show the starting lineup
+@app.route('/race-result')
+def race_result():
+    # TODO: Add a route to view and update an individual starting lineup entry
+    race_results = Result.query.filter_by(week=session['week_key']).order_by(Result.finish_position).all()
+    return render_template('race-result.html', title='Race Results', race_results=race_results)
 
 
 # TODO add and admin page with links to register new users, enter schedule event, enter a driver entry, update a driver entry, enter results, enter/update weekly results, enter/update standings.
