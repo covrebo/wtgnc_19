@@ -45,6 +45,7 @@ def register():
         return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -62,6 +63,7 @@ def login():
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
 
 @app.route('/logout')
 def logout():
@@ -115,7 +117,12 @@ def account():
         form.display_name.data = current_user.display_name
         form.email.data = current_user.email
     image_file = url_for('static', filename=f"profile_pics/{current_user.profile_image}")
-    return render_template('account.html', title='Account', legend='Account Info', image_file=image_file, form=form)
+    # TODO: Add link to update weekly picks
+    # TODO: Add statistics to account - driver popularity, weekly avg points, wins, etc.
+    picks = Pick.query.filter_by(user_id=current_user.id).order_by(Pick.week).all()
+    results = WeeklyResult.query.filter_by(user_id=current_user.id).order_by(WeeklyResult.week).all()
+    standings = WeeklyStanding.query.filter_by(user_id=current_user.id).order_by(WeeklyStanding.week).all()
+    return render_template('account.html', title='Account', legend='Account Info', image_file=image_file, form=form, picks=picks, results=results, standings=standings)
 
 
 # Route to submit weekly driver roster
@@ -125,13 +132,18 @@ def pick_page():
     # TODO add modal to the page to confirm which week they are pick for
     form = PickSelectionForm()
     if form.validate_on_submit():
-        picks = Pick(week=session['week_num'], display_name=current_user.display_name, driver_1=form.pick_1.data,
-                     driver_2=form.pick_2.data, driver_3=form.pick_3.data, driver_4=form.pick_4.data,
-                     make=form.make.data, user_id=current_user.id)
-        db.session.add(picks)
-        db.session.commit()
-        flash(f"You have submitted picks for {session['week_name']}.  Good Luck!", 'success')
-        return redirect(url_for('picks_summary'))
+        pick_check = Pick.query.filter_by(week=session['week_num'], user_id=current_user.id).first()
+        if pick_check:
+            flash(f"Sorry, you have already submitted picks for {session['week_name']}.  Please visit the account page to update your picks or select a different week.", 'info')
+            redirect(url_for('pick_page'))
+        else:
+            picks = Pick(week=session['week_num'], display_name=current_user.display_name, driver_1=form.pick_1.data,
+                         driver_2=form.pick_2.data, driver_3=form.pick_3.data, driver_4=form.pick_4.data,
+                         make=form.make.data, user_id=current_user.id)
+            db.session.add(picks)
+            db.session.commit()
+            flash(f"You have submitted picks for {session['week_name']}.  Good Luck!", 'success')
+            return redirect(url_for('picks_summary'))
     return render_template('pick-page.html', title='Pick Page', form=form)
 
 

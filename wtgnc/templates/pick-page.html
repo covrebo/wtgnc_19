@@ -72,6 +72,9 @@
                         {% endif %}
                     </div>
                 </fieldset>
+                <p class="alert alert-primary">
+                    You are submitting picks for <strong>{{ session['week_name'] }}</strong>.  If this is not the right race - <a href="{{ url_for('week_selection') }}">pick a different week</a>.
+                </p>
                 <div class="form-group">
                     {{ form.submit(class="btn btn-outline-info") }}
                 </div>
