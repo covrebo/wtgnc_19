@@ -85,7 +85,7 @@
 
             <div class="text-center m-2">
                 {% if  not session['week_name'] %}
-                    <a class="btn btn-outline-info" href="{{ url_for('week_selection') }}">Click Here To Select A Race</a>
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('week_selection') }}">Click Here To Select A Race</a>
                 {% else %}
                     <h2 class="h2">{{ current_user.display_name }} - {{ session['week_name'] }}</h2>
                 {% endif %}

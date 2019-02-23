@@ -4,7 +4,7 @@ from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
 from wtforms import StringField, SelectField, SubmitField, PasswordField, BooleanField, IntegerField, DateField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo
-from wtgnc.models import User, Driver, Make
+from wtgnc.models import User, Make
 from wtgnc.data_vars import schedule_week_num, make_list
 
 # Create a registration form class
@@ -121,12 +121,7 @@ class WeekSelectionForm(FlaskForm):
 #     if pick_3.data == pick_2.data or pick_3.data == pick_2.data:
 #         raise ValidationError('Please pick three DIFFERENT drivers.')
 
-# # TODO: Dynamically update by moving to routes file https://stackoverflow.com/questions/46921823/dynamic-choices-wtforms-flask-selectfield
-# def generate_entry_list():
-#     # TODO: Return an error if a week has not been selected
-#     detailed_entry_list = Driver.query.filter_by(active=True).order_by(Driver.car_number).all()
-#     entry_list = [('#' + str(driver.car_number) + ' - ' + driver.driver, '#' + str(driver.car_number) + ' - ' + driver.driver) for driver in detailed_entry_list]
-#     return entry_list
+
 # TODO: Dynamically update by moving to routes file https://stackoverflow.com/questions/46921823/dynamic-choices-wtforms-flask-selectfield
 def generate_make_list():
     # TODO: Return an error if a week has not been selected
@@ -268,6 +263,3 @@ class UploadForm(FlaskForm):
     ])
     submit = SubmitField('Upload File')
 
-
-# TODO Form to enter weekly NASCAR results
-# TODO Form to enter weekly NASCAR standings

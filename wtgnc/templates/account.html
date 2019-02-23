@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="content-section container col-md-8">
+    <div class="content-section container col-md-10">
         <div class="media">
             <img src="{{ image_file }}" class="rounded-circle account-img m-2">
             <div class="media-body">
@@ -98,6 +98,7 @@
                             <th scope="col">Driver #3</th>
                             <th scope="col">Driver #4</th>
                             <th scope="col">Manufacturer</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody class="table-striped">
@@ -109,6 +110,7 @@
                                 <td>{{ pick.driver_3 }}</td>
                                 <td>{{ pick.driver_4 }}</td>
                                 <td>{{ pick.make }}</td>
+                                <td><a class="btn btn-primary btn-sm" href="{{ url_for('update_picks', pick_id=pick.id) }}">Update</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

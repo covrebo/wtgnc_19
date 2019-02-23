@@ -98,7 +98,6 @@ def save_picture(form_picture):
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    # TODO: Add a weekly pick, result, and standings summary for each account
     # TODO: Add driver popularity and other stats to account summary
     form = UpdateAccountForm()
     if form.validate_on_submit():
@@ -119,7 +118,6 @@ def account():
         form.display_name.data = current_user.display_name
         form.email.data = current_user.email
     image_file = url_for('static', filename=f"profile_pics/{current_user.profile_image}")
-    # TODO: Add link to update weekly picks
     # TODO: Add statistics to account - driver popularity, weekly avg points, wins, etc.
     picks = Pick.query.filter_by(user_id=current_user.id).order_by(Pick.week).all()
     results = WeeklyResult.query.filter_by(user_id=current_user.id).order_by(WeeklyResult.week).all()
@@ -160,11 +158,62 @@ def pick_page():
     return render_template('pick-page.html', title='Pick Page', form=form)
 
 
-# Route to display the weekly picks
+# Route to view individual roster
+@app.route('/picks/<int:pick_id>', methods=['GET', 'POST'])
+@login_required
+def picks_view(pick_id):
+    picks = Pick.query.get_or_404(pick_id)
+    return render_template('picks-view.html', title='Picks Summary', picks=picks)
+
+
+# Route to update a pick
+@app.route('/picks/<int:pick_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_picks(pick_id):
+    picks = Pick.query.get_or_404(pick_id)
+    if current_user.id != picks.user_id:
+        abort(403)
+    form = PickSelectionForm()
+    form.pick_1.choices = generate_entry_list()
+    form.pick_2.choices = generate_entry_list()
+    form.pick_3.choices = generate_entry_list()
+    form.pick_4.choices = generate_entry_list()
+    if form.validate_on_submit():
+        picks.driver_1 = form.pick_1.data
+        picks.driver_2 = form.pick_2.data
+        picks.driver_3 = form.pick_3.data
+        picks.driver_4 = form.pick_4.data
+        picks.make = form.make.data
+        db.session.commit()
+        flash(f"You have updated your picks!", 'success')
+        return redirect(url_for('picks_summary'))
+    elif request.method == 'GET':
+        form.pick_1.data = picks.driver_1
+        form.pick_2.data = picks.driver_2
+        form.pick_3.data = picks.driver_3
+        form.pick_4.data = picks.driver_4
+        form.make.data = picks.make
+    return render_template('picks-update.html', title='Update Picks', legend='Update Picks', form=form, picks=picks)
+
+
+# Route to delete a driver entry
+@app.route('/picks/<int:pick_id>/delete', methods=['POST'])
+@login_required
+def delete_pick(pick_id):
+    picks = Pick.query.get_or_404(pick_id)
+    if current_user.id != picks.user_id:
+        abort(403)
+    db.session.delete(picks)
+    db.session.commit()
+    flash(f"Picks have been deleted", 'success')
+    return redirect(url_for('picks_summary'))
+
+
+# Route to display all weekly picks
 @app.route('/picks-summary')
 @login_required
-# TODO: Allow users to update their picks if they are the ones that submitted them
 def picks_summary():
+    # TODO: add visibility field to picks to turn on visibility at race time from admin console while still being visible from account page
     picks = Pick.query.filter_by(week=session['week_num']).all()
     return render_template('picks.html', title='Pick Summary', picks=picks)
 
@@ -318,8 +367,7 @@ def race_event():
         db.session.add(event)
         db.session.commit()
         flash(f"You have added the {form.race.data}.", 'success')
-        # TODO change redirect to pick summary page
-        return redirect(url_for('home'))
+        return redirect(url_for('schedule'))
     return render_template('race-event.html', title='Race Event', legend='Create Race Event', form=form)
 
 
