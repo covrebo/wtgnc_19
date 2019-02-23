@@ -1,10 +1,12 @@
 import os
 import secrets
 import csv
+# For resizing profile pictures
 from PIL import Image
 from flask_login import login_user, current_user, logout_user, login_required
 from wtgnc import app, db
 from flask import render_template, url_for, session, flash, redirect, request, abort
+# For renaming csv files for safe uploading
 from werkzeug.utils import secure_filename
 from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm, WeeklyResultUpdateForm, WeeklyStandingUpdateForm, UploadForm
 from wtgnc.models import User, Driver, Event, Pick, WeeklyResult, WeeklyStanding, Result, StartingLineup
@@ -59,7 +61,7 @@ def login():
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             flash(f"{current_user.display_name} successfully logged in.", 'success')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(next_page) if next_page else redirect(url_for('week_selection'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -301,7 +303,7 @@ def delete_driver(driver_id):
 # Route to show the current entry list
 @app.route('/entry-list')
 def entry_list():
-    entry_list = Driver.query.order_by(Driver.car_number).all()
+    entry_list = Driver.query.filter_by(week=session['week_key']).order_by(Driver.car_number).all()
     return render_template('entry-list.html', title='Entry List', entry_list=entry_list)
 
 
