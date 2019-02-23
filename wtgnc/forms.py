@@ -121,12 +121,12 @@ class WeekSelectionForm(FlaskForm):
 #     if pick_3.data == pick_2.data or pick_3.data == pick_2.data:
 #         raise ValidationError('Please pick three DIFFERENT drivers.')
 
-# TODO: Dynamically update by moving to routes file https://stackoverflow.com/questions/46921823/dynamic-choices-wtforms-flask-selectfield
-def generate_entry_list():
-    # TODO: Return an error if a week has not been selected
-    detailed_entry_list = Driver.query.filter_by(active=True).order_by(Driver.car_number).all()
-    entry_list = [('#' + str(driver.car_number) + ' - ' + driver.driver, '#' + str(driver.car_number) + ' - ' + driver.driver) for driver in detailed_entry_list]
-    return entry_list
+# # TODO: Dynamically update by moving to routes file https://stackoverflow.com/questions/46921823/dynamic-choices-wtforms-flask-selectfield
+# def generate_entry_list():
+#     # TODO: Return an error if a week has not been selected
+#     detailed_entry_list = Driver.query.filter_by(active=True).order_by(Driver.car_number).all()
+#     entry_list = [('#' + str(driver.car_number) + ' - ' + driver.driver, '#' + str(driver.car_number) + ' - ' + driver.driver) for driver in detailed_entry_list]
+#     return entry_list
 # TODO: Dynamically update by moving to routes file https://stackoverflow.com/questions/46921823/dynamic-choices-wtforms-flask-selectfield
 def generate_make_list():
     # TODO: Return an error if a week has not been selected
@@ -139,16 +139,16 @@ class PickSelectionForm(FlaskForm):
     # Form field to choose the week to display data from
     pick_1 = SelectField(validators=[
         DataRequired()
-        ], choices=generate_entry_list())
+        ], coerce=str)
     pick_2 = SelectField(validators=[
         DataRequired()
-    ], choices=generate_entry_list())
+        ], coerce=str)
     pick_3 = SelectField(validators=[
         DataRequired()
-        ], choices=generate_entry_list())
+        ], coerce=str)
     pick_4 = SelectField(validators=[
         DataRequired()
-    ], choices=generate_entry_list())
+        ], coerce=str)
     make = SelectField(validators=[
         DataRequired()
         ], choices=make_list)

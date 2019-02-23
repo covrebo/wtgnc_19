@@ -125,12 +125,23 @@ def account():
     return render_template('account.html', title='Account', legend='Account Info', image_file=image_file, form=form, picks=picks, results=results, standings=standings)
 
 
+# function to create a dynamic entry list for the pick page that updates when new entries are added to the database
+def generate_entry_list():
+    # TODO: Return an error if a week has not been selected
+    detailed_entry_list = Driver.query.filter_by(week=session['week_key']).order_by(Driver.car_number).all()
+    entry_list = [('#' + str(driver.car_number) + ' - ' + driver.driver, '#' + str(driver.car_number) + ' - ' + driver.driver) for driver in detailed_entry_list]
+    return entry_list
+
 # Route to submit weekly driver roster
 @app.route('/pick-page', methods=['GET', 'POST'])
 @login_required
 def pick_page():
     # TODO add modal to the page to confirm which week they are pick for
     form = PickSelectionForm()
+    form.pick_1.choices = generate_entry_list()
+    form.pick_2.choices = generate_entry_list()
+    form.pick_3.choices = generate_entry_list()
+    form.pick_4.choices = generate_entry_list()
     if form.validate_on_submit():
         pick_check = Pick.query.filter_by(week=session['week_num'], user_id=current_user.id).first()
         if pick_check:
