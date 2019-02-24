@@ -87,6 +87,31 @@ class UpdateAccountForm(FlaskForm):
                 raise ValidationError('That email is taken, please choose another.')
 
 
+# Form to request a password reset
+class RequestResetTokenForm(FlaskForm):
+    email = StringField('Email', validators=[
+        DataRequired(),
+        Email()
+    ])
+    submit = SubmitField('Request Password Reset')
+
+    # Function to validate the unique username before submitting the form
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('That account does not exist, contact a commissioner to register.')
+
+# Form to reset a password
+class PasswordResetForm(FlaskForm):
+    password = PasswordField('Password', validators=[
+        DataRequired()
+    ])
+    confirm_password = PasswordField('Confirm Password', validators=[
+        DataRequired(),
+        EqualTo('password')
+    ])
+    submit = SubmitField('Set New Password')
+
 # Create a login form class
 class LoginForm(FlaskForm):
     # Form fields with validators

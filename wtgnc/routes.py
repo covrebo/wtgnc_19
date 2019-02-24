@@ -4,11 +4,12 @@ import csv
 # For resizing profile pictures
 from PIL import Image
 from flask_login import login_user, current_user, logout_user, login_required
-from wtgnc import app, db
+from wtgnc import app, db, mail
 from flask import render_template, url_for, session, flash, redirect, request, abort
+from flask_mail import Message
 # For renaming csv files for safe uploading
 from werkzeug.utils import secure_filename
-from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm, WeeklyResultUpdateForm, WeeklyStandingUpdateForm, UploadForm
+from wtgnc.forms import WeekSelectionForm, RegistrationForm, LoginForm, PickSelectionForm, EntryForm, EventForm, WeeklyResultForm, WeeklyStandingForm, UpdateAccountForm, WeeklyResultUpdateForm, WeeklyStandingUpdateForm, UploadForm, RequestResetTokenForm, PasswordResetForm
 from wtgnc.models import User, Driver, Event, Pick, WeeklyResult, WeeklyStanding, Result, StartingLineup
 
 
@@ -123,6 +124,57 @@ def account():
     results = WeeklyResult.query.filter_by(user_id=current_user.id).order_by(WeeklyResult.week).all()
     standings = WeeklyStanding.query.filter_by(user_id=current_user.id).order_by(WeeklyStanding.week).all()
     return render_template('account.html', title='Account', legend='Account Info', image_file=image_file, form=form, picks=picks, results=results, standings=standings)
+
+
+# Function to send a reset email message
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request',
+                  sender='test.mndev.tech@gmail.com',
+                  recipients=[user.email],)
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('password_reset', token=token, _external=True)}
+
+If you did not make this request.  Ignore this email and no changes will be made.
+
+Yours Truly,
+WTGNC Helper Bot
+'''
+    mail.send(msg)
+
+
+# Route to request a password reset email
+@app.route('/request-password-reset', methods=['GET', 'POST'])
+def request_password_reset():
+    if current_user.is_authenticated:
+        flash('You are already logged in.', 'info')
+        return redirect(url_for('home'))
+    form = RequestResetTokenForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash("An email has been sent with instructions to reset your password", 'info')
+        return redirect(url_for('login'))
+    return render_template('request-password-reset.html', title='Request a Password Reset', legend="Request a Password Reset", form=form)
+
+
+# Route to verify a token and reset the password
+@app.route('/password-reset/<token>', methods=['GET', 'POST'])
+def password_reset(token):
+    if current_user.is_authenticated:
+        flash('You are already logged in.', 'info')
+        return redirect(url_for('home'))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('This link is invalid or has expired.  Please request another.', 'warning')
+        return redirect(url_for('request_password_reset'))
+    form = PasswordResetForm()
+    if form.validate_on_submit():
+        user.set_pw(form.password.data)
+        db.session.commit()
+        flash(f'Your password has been updated.  You can now login.', 'success')
+        return redirect(url_for('login'))
+    return render_template('reset-password.html', title='Reset Password', legend='Reset Password', form=form)
 
 
 # function to create a dynamic entry list for the pick page that updates when new entries are added to the database
