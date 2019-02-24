@@ -1,23 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
     <body class="container col-md-8">
-        <h2 class="h2 text-center">Weekly Standings</h2>
+        <h2 class="h2 text-center">Weekly Results</h2>
         <table class="table">
             <thead class="thead-light">
                 <tr class="text-center">
                     <th scope="col">Rank</th>
                     <th scope="col">Name</th>
                     <th scope="col">Points</th>
-                    <th scope="col">Wins</th>
                 </tr>
             </thead>
             <tbody class="table-striped">
-                {% for result in weekly_standings %}
+                {% for result in weekly_results %}
                     <tr class="text-center">
                         <td>{{ result.rank }}</td>
-                        <td><a href="{{ url_for('view_weekly_standing', weekly_standing_id=result.id) }}">{{ result.name.display_name }}</a></td>
+                        <td><a href="{{ url_for('pool.view_weekly_result', weekly_result_id=result.id) }}">{{ result.name.display_name }}</a></td>
                         <td>{{ result.points }}</td>
-                        <td>{{ result.wins }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

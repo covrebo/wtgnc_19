@@ -8,37 +8,37 @@
         </div>
         <div class="row text-center">
             <div class="col-sm m-1">
-                <a href="{{ url_for('member_list') }}" class="btn btn-primary btn-lg btn-block" role="button">View Pool Members</a>
+                <a href="{{ url_for('pool.member_list') }}" class="btn btn-primary btn-lg btn-block" role="button">View Pool Members</a>
             </div>
             <div class="col-sm m-1">
-                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg btn-block" role="button">Register Pool Member</a>
-            </div>
-        </div>
-        <div class="row text-center">
-            <div class="col-sm m-1">
-                <a href="{{ url_for('schedule') }}" class="btn btn-primary btn-lg btn-block" role="button">List/Update Schedule</a>
-            </div>
-            <div class="col-sm m-1">
-                <a href="{{ url_for('race_event') }}" class="btn btn-primary btn-lg btn-block" role="button">Create Race Event</a>
+                <a href="{{ url_for('users.register') }}" class="btn btn-primary btn-lg btn-block" role="button">Register Pool Member</a>
             </div>
         </div>
         <div class="row text-center">
             <div class="col-sm m-1">
-                <a href="{{ url_for('entry_list') }}" class="btn btn-primary btn-lg btn-block" role="button">View/Update Entry List</a>
+                <a href="{{ url_for('races.schedule') }}" class="btn btn-primary btn-lg btn-block" role="button">List/Update Schedule</a>
             </div>
             <div class="col-sm m-1">
-                <a href="{{ url_for('driver_entry') }}" class="btn btn-primary btn-lg btn-block" role="button">Create Driver Entry</a>
-            </div>
-            <div class="col-sm m-1">
-                <a href="{{ url_for('entry_list_upload') }}" class="btn btn-primary btn-lg btn-block" role="button">Upload Entry List</a>
+                <a href="{{ url_for('races.race_event') }}" class="btn btn-primary btn-lg btn-block" role="button">Create Race Event</a>
             </div>
         </div>
         <div class="row text-center">
             <div class="col-sm m-1">
-                <a href="{{ url_for('weekly_results') }}" class="btn btn-primary btn-lg btn-block" role="button">View/Update Weekly Results</a>
+                <a href="{{ url_for('races.entry_list') }}" class="btn btn-primary btn-lg btn-block" role="button">View/Update Entry List</a>
             </div>
             <div class="col-sm m-1">
-                <a href="{{ url_for('weekly_result_entry') }}" class="btn btn-primary btn-lg btn-block" role="button">Enter Weekly Results</a>
+                <a href="{{ url_for('races.driver_entry') }}" class="btn btn-primary btn-lg btn-block" role="button">Create Driver Entry</a>
+            </div>
+            <div class="col-sm m-1">
+                <a href="{{ url_for('races.entry_list_upload') }}" class="btn btn-primary btn-lg btn-block" role="button">Upload Entry List</a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm m-1">
+                <a href="{{ url_for('pool.weekly_results') }}" class="btn btn-primary btn-lg btn-block" role="button">View/Update Weekly Results</a>
+            </div>
+            <div class="col-sm m-1">
+                <a href="{{ url_for('pool.weekly_result_entry') }}" class="btn btn-primary btn-lg btn-block" role="button">Enter Weekly Results</a>
             </div>
             <div class="col-sm m-1">
                 <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Upload Weekly Results</a>
@@ -52,15 +52,15 @@
                 <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Enter Race Results</a>
             </div>
             <div class="col-sm m-1">
-                <a href="{{ url_for('race_results_upload') }}" class="btn btn-primary btn-lg btn-block" role="button">Upload Race Results</a>
+                <a href="{{ url_for('races.race_results_upload') }}" class="btn btn-primary btn-lg btn-block" role="button">Upload Race Results</a>
             </div>
         </div>
         <div class="row text-center">
             <div class="col-sm m-1">
-                <a href="{{ url_for('standings') }}" class="btn btn-primary btn-lg btn-block" role="button">View/Update Standings</a>
+                <a href="{{ url_for('pool.standings') }}" class="btn btn-primary btn-lg btn-block" role="button">View/Update Standings</a>
             </div>
             <div class="col-sm m-1">
-                <a href="{{ url_for('standing_entry') }}" class="btn btn-primary btn-lg btn-block" role="button">Enter Standings</a>
+                <a href="{{ url_for('pool.standing_entry') }}" class="btn btn-primary btn-lg btn-block" role="button">Enter Standings</a>
             </div>
             <div class="col-sm m-1">
                 <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Upload Standings</a>
@@ -71,10 +71,10 @@
                 <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">View/Update Starting Lineup</a>
             </div>
             <div class="col-sm m-1">
-                <a href="{{ url_for('starting_lineup_upload') }}" class="btn btn-primary btn-lg btn-block" role="button">Upload Starting Lineup</a>
+                <a href="{{ url_for('races.starting_lineup_upload') }}" class="btn btn-primary btn-lg btn-block" role="button">Upload Starting Lineup</a>
             </div>
             <div class="col-sm m-1">
-                <a href="#" class="btn btn-secondary btn-lg btn-block" role="button">Enter Make</a>
+                <a href="{{ url_for('races.make_entry') }}" class="btn btn-primary btn-lg btn-block" role="button">Enter Make</a>
             </div>
         </div>
     </body>

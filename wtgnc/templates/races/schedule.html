@@ -19,7 +19,7 @@
                             <td>{{ event.week_id }}</td>
                             <td>{{ event.date }}</td>
                             <td>{{ event.track }}</td>
-                            <td><a href="{{ url_for('race', race_id=event.id) }}">{{ event.race }}</a></td>
+                            <td><a href="{{ url_for('races.race', race_id=event.id) }}">{{ event.race }}</a></td>
                         </tr>
                 {% endfor %}
             </tbody>

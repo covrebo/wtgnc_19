@@ -2,17 +2,17 @@
 {% block content %}
     <body class="container text-center col-md-8">
         <div class="jumbotron">
-            <img class="" src="static/images/trophy_512.png" alt="" width="72" height="72">
+            <img class="" src="{{ url_for('static', filename='images/trophy_512.png') }}" alt="" width="72" height="72">
             <h1 class="display-4">Welcome Race Fans!</h1>
             <p class="lead">The Woodland Trail Grand National Cup has a new home.</p>
             <hr class="my-4">
             <p>Login to start exploring the site.</p>
             <div class="row justify-content-center">
                 <div class="col-sm-3">
-                    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('login') }}" role="button">Login</a>
+                    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('users.login') }}" role="button">Login</a>
                 </div>
                 <div class="col-sm-3">
-                    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('pick_page') }}" role="button">Pick Page</a>
+                    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('pool.pick_page') }}" role="button">Pick Page</a>
                 </div>
             </div>
         </div>

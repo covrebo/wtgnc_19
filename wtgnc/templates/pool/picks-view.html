@@ -2,12 +2,14 @@
 {% block content %}
     <body class="container col-md-6">
         <div class="content-section">
-            <h1>Weekly Result Summary</h1>
-            <h2 class="h2 text-muted">Picker: {{ weekly_result.name.display_name }}</h2>
-            <h3 class="h3 text-muted">Rank: {{ weekly_result.rank }}</h3>
-            <h3 class="h3 text-muted">Rank: {{ weekly_result.points }}</h3>
-            {% if current_user.role == 'admin' %}
-                <a class="btn btn-primary mt-1 mb-1 mr-1" href="{{ url_for('update_weekly_result', weekly_result_id=weekly_result.id) }}">Update</a>
+            <h1>{{ session['week_name'] }} Picks Summary</h1>
+            <h2 class="h2 text-muted">Driver 1: {{ picks.driver_1 }}</h2>
+            <h2 class="h2 text-muted">Driver 2: {{ picks.driver_2 }}</h2>
+            <h2 class="h2 text-muted">Driver 3: {{ picks.driver_3 }}</h2>
+            <h2 class="h2 text-muted">Driver 4: {{ picks.driver_4 }}</h2>
+            <h2 class="h2 text-muted">Winning Manufacturer: {{ picks.make }}</h2>
+            {% if current_user.id == picks.user_id %}
+                <a class="btn btn-primary mt-1 mb-1 mr-1" href="{{ url_for('pool.update_picks', pick_id=picks.id) }}">Update</a>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
             {% endif %}
@@ -17,17 +19,17 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete Result?</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Delete Pick?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                Are you sure you want to delete this result?
+                Are you sure you want to delete your picks?
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <form action="{{ url_for('delete_weekly_result', weekly_result_id=weekly_result.id) }}" method="POST">
+                <form action="{{ url_for('pool.delete_pick', pick_id=picks.id) }}" method="POST">
                     <input class="btn btn-danger" type="submit" value="Delete">
                 </form>
               </div>

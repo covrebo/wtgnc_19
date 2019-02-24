@@ -5,7 +5,7 @@
             <form method="POST" action="">
                 {{ form.hidden_tag() }}
                 <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">{{ legend }}</legend>
+                    <legend class="border-bottom mb-4">Weekly Pick Page</legend>
                     <div class="form-group">
                         {{ form.pick_1.label(class="form-control-label") }}
                         {% if form.pick_1.errors %}
@@ -73,7 +73,7 @@
                     </div>
                 </fieldset>
                 <p class="alert alert-primary">
-                    You are submitting picks for <strong>{{ session['week_name'] }}</strong>.  If this is not the right race - <a href="{{ url_for('week_selection') }}">pick a different week</a>.
+                    You are submitting picks for <strong>{{ session['week_name'] }}</strong>.  If this is not the right race - <a href="{{ url_for('main.week_selection') }}">pick a different week</a>.
                 </p>
                 <div class="form-group">
                     {{ form.submit(class="btn btn-outline-info") }}

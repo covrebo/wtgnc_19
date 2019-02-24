@@ -2,11 +2,14 @@
 {% block content %}
 <body class="container col-md-6">
     <div class="content-section">
-        <h1>Week {{ race.week_id }} - {{ race.race }}</h1>
-        <h2 class="h2 text-muted">Track: {{ race.track }}</h2>
-        <h3 class="h3 text-muted">Date: {{ race.date }}</h3>
+        <h1>{{ driver.driver }}</h1>
+        <h2 class="h2 text-muted">Car #{{ driver.car_number }}</h2>
+        <h3 class="h3 text-muted">Sponsored: {{ driver.sponsor }}</h3>
+        <h3 class="h3 text-muted">Team: {{ driver.team }}</h3>
+        <h3 class="h3 text-muted">Manufacturer: {{ driver.make }}</h3>
+        <h3 class="h3 text-muted">Is active: {{ driver.active }}</h3>
         {% if current_user.role == 'admin' %}
-            <a class="btn btn-primary mt-1 mb-1 mr-1" href="{{ url_for('update_race', race_id=race.id) }}">Update</a>
+            <a class="btn btn-primary mt-1 mb-1 mr-1" href="{{ url_for('races.update_driver', driver_id=driver.id) }}">Update</a>
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
         {% endif %}
@@ -16,17 +19,17 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="deleteModalLabel">Delete Race?</h5>
+            <h5 class="modal-title" id="deleteModalLabel">Delete Driver?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            Are you sure you want to delete this race?  This will also delete all instances of the race used as a pick and for scoring.
+            Are you sure you want to delete this driver?  This will also delete all instances of the driver used as a pick and for scoring.  If this driver is not competing in a race and you want to hide them from the pick and entry list, simply update the driver and change the active status.
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <form action="{{ url_for('delete_race', race_id=race.id) }}" method="POST">
+            <form action="{{ url_for('races.delete_driver', driver_id=driver.id) }}" method="POST">
                 <input class="btn btn-danger" type="submit" value="Delete">
             </form>
           </div>
