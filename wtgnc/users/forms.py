@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField,SubmitField, PasswordField, BooleanField, ValidationError
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from wtgnc.models import User
 
@@ -12,18 +12,24 @@ class RegistrationForm(FlaskForm):
     user_first_name = StringField('First Name', validators=[
         DataRequired(),
         Length(min=2, max=20)
-    ])
+        ])
     user_last_name = StringField('Last Name', validators=[
         DataRequired(),
         Length(min=2, max=20)
-    ])
+        ])
     display_name = StringField('Display Name', validators=[
         DataRequired(),
         Length(min=2, max=30)
-    ])
+        ])
     email =  StringField('Email', validators=[
         DataRequired(),
         Email()
+        ])
+    role = SelectField('Role', validators=[
+        DataRequired()
+        ], choices=[
+        ('user', 'User'),
+        ('admin', 'Admin')
         ])
     password = PasswordField('Password', validators=[
         DataRequired()

@@ -8,14 +8,14 @@ from wtgnc.users.utils import send_reset_email, save_picture
 users = Blueprint('users', __name__, template_folder='templates')
 
 @users.route('/register', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def register():
     if current_user.is_authenticated and current_user.role != 'admin':
         flash('You are already logged in as a registered user.  Contact a commissioner to register a new account.', 'info')
         return redirect(url_for('main.home'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(user_first_name=form.user_first_name.data, user_last_name=form.user_last_name.data, display_name=form.display_name.data, email=form.email.data)
+        user = User(user_first_name=form.user_first_name.data, user_last_name=form.user_last_name.data, display_name=form.display_name.data, email=form.email.data, role=form.role.data)
         user.set_pw(form.password.data)
         db.session.add(user)
         db.session.commit()
