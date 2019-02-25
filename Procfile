@@ -1,1 +1,1 @@
-web: flask db upgrade; gunicorn wtgnc_19:wtgnc
+web: flask db upgrade; gunicorn run:wtgnc
