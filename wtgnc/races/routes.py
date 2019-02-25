@@ -1,5 +1,6 @@
 import os
 import csv
+from io import StringIO
 from flask_login import current_user, login_required
 from wtgnc import db
 from flask import render_template, url_for, session, flash, redirect, request, abort, Blueprint, current_app
@@ -16,15 +17,11 @@ races = Blueprint('races', __name__, template_folder='templates')
 @login_required
 def entry_list_upload():
     form = UploadForm()
-    # Upload the file to uploads folder
     if form.validate_on_submit():
         if form.upload.data:
             file = form.upload.data
-            f_name = secure_filename(file.filename)
-            f_path = os.path.join(current_app.root_path, 'static/uploads', f_name)
-            file.save(f_path)
-            file = open(f_path, "r", encoding="utf-8")
-            csv_reader = csv.reader(file, delimiter=',')
+            file_data = StringIO(file.stream.read().decode("UTF8"), newline=None)
+            csv_reader = csv.reader(file_data, delimiter=',')
             # Skip the headers
             next(csv_reader)
             for row in csv_reader:
@@ -32,9 +29,6 @@ def entry_list_upload():
                 entry = Driver(week=int(session['week_key']), car_number=int(row[0]), driver=row[1], sponsor=row[2], make=row[3], team=row[4])
                 db.session.add(entry)
                 db.session.commit()
-            # Delete the file
-            if os.path.exists(f_path):
-                os.remove(f_path)
             flash('You have successfully uploaded the entry list', 'success')
             return redirect(url_for('races.entry_list'))
     else:
@@ -191,11 +185,8 @@ def starting_lineup_upload():
     if form.validate_on_submit():
         if form.upload.data:
             file = form.upload.data
-            f_name = secure_filename(file.filename)
-            f_path = os.path.join(current_app.root_path, 'static/uploads', f_name)
-            file.save(f_path)
-            file = open(f_path, "r", encoding="utf-8")
-            csv_reader = csv.reader(file, delimiter=',')
+            file_data = StringIO(file.stream.read().decode("UTF8"), newline=None)
+            csv_reader = csv.reader(file_data, delimiter=',')
             # Skip the headers
             next(csv_reader)
             for row in csv_reader:
@@ -203,11 +194,8 @@ def starting_lineup_upload():
                 entry = StartingLineup(week=int(session['week_key']), position=int(row[0]), car_number=int(row[1]), driver=row[2], team=row[3])
                 db.session.add(entry)
                 db.session.commit()
-            # Delete the file
-            if os.path.exists(f_path):
-                os.remove(f_path)
             flash(f"You have successfully uploaded the starting lineup for {session['week_name']}", 'success')
-            return redirect(url_for('main.home'))
+            return redirect(url_for('races.starting_lineup'))
     else:
         return render_template('races/upload-file.html', title='Upload Starting Lineup', legend='Upload Starting Lineup', form=form)
 
@@ -229,11 +217,8 @@ def race_results_upload():
     if form.validate_on_submit():
         if form.upload.data:
             file = form.upload.data
-            f_name = secure_filename(file.filename)
-            f_path = os.path.join(current_app.root_path, 'static/uploads', f_name)
-            file.save(f_path)
-            file = open(f_path, "r", encoding="utf-8")
-            csv_reader = csv.reader(file, delimiter=',')
+            file_data = StringIO(file.stream.read().decode("UTF8"), newline=None)
+            csv_reader = csv.reader(file_data, delimiter=',')
             # Skip the headers
             next(csv_reader)
             for row in csv_reader:
@@ -241,11 +226,8 @@ def race_results_upload():
                 entry = Result(week=int(session['week_key']), finish_position=int(row[0]), driver=row[1], car_number=int(row[2]), make=row[3], laps=int(row[4]), start_position=int(row[5]), laps_led=int(row[6]), points=int(row[7]), bonus_points=int(row[8]))
                 db.session.add(entry)
                 db.session.commit()
-            # Delete the file
-            if os.path.exists(f_path):
-                os.remove(f_path)
             flash(f"You have successfully uploaded the race results for {session['week_name']}", 'success')
-            return redirect(url_for('main.home'))
+            return redirect(url_for('races.race_result'))
     else:
         return render_template('races/upload-file.html', title='Upload Race Results', legend='Upload Race Results', form=form)
 
@@ -312,6 +294,7 @@ def delete_make(make_id):
     return redirect(url_for('races.make_list'))
 
 
+# TODO: Implement moment so dates display correctly
 # Route to show the current schedule
 @races.route('/make')
 def make_list():

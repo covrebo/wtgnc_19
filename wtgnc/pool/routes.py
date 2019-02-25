@@ -106,6 +106,7 @@ def admin():
         return redirect(url_for('main.home'))
 
 
+# TODO: Create routes and templates to update and delete pool members - esp reset passwords for users without admin rights.
 # Route to show the current list of pool members
 @pool.route('/member-list')
 def member_list():
