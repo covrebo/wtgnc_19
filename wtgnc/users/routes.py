@@ -8,7 +8,7 @@ from wtgnc.users.utils import send_reset_email, save_picture
 users = Blueprint('users', __name__, template_folder='templates')
 
 @users.route('/register', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def register():
     if current_user.is_authenticated and current_user.role != 'admin':
         flash('You are already logged in as a registered user.  Contact a commissioner to register a new account.', 'info')
