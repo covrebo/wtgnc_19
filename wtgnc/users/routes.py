@@ -50,7 +50,7 @@ def logout():
         session.pop('week_num')
     if session.get('week_name') != None:
         session.pop('week_name')
-    flash('You have been logged out.')
+    flash('You have been logged out.', 'success')
     return redirect(url_for('main.home'))
 
 

@@ -163,22 +163,18 @@
                     <thead class="thead-light">
                         <tr class="text-center">
                             <th scope="col">Week</th>
-                            <th scope="col">Driver #1</th>
-                            <th scope="col">Driver #2</th>
-                            <th scope="col">Driver #3</th>
-                            <th scope="col">Driver #4</th>
-                            <th scope="col">Manufacturer</th>
+                            <th scope="col">Rank</th>
+                            <th scope="col">Points</th>
+                            <th scope="col">Wins</th>
                         </tr>
                     </thead>
                     <tbody class="table-striped">
-                        {% for pick in picks %}
+                        {% for entry in standings %}
                             <tr class="text-center">
-                                <td>{{ pick.week }}</td>
-                                <td>{{ pick.driver_1 }}</td>
-                                <td>{{ pick.driver_2 }}</td>
-                                <td>{{ pick.driver_3 }}</td>
-                                <td>{{ pick.driver_4 }}</td>
-                                <td>{{ pick.make }}</td>
+                                <td>{{ entry.week }}</td>
+                                <td>{{ entry.rank }}</td>
+                                <td>{{ entry.points }}</td>
+                                <td>{{ entry.wins }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
