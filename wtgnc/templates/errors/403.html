@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="jumbotron text-center">
+        <h1 class="display-4">You do not have permission to do that. (403)</h1>
+        <p class="lead">Please check your account and try again.</p>
+        <hr class="my-4">
+        <p class="lead">
+            <img src="{{ url_for("static", filename="images/img-403.jpg") }}">
+        </p>
+    </div>
+{% endblock content %}

@@ -31,9 +31,11 @@ def create_app(config_class=Config):
     from wtgnc.pool.routes import pool
     from wtgnc.races.routes import races
     from wtgnc.main.routes import main
+    from wtgnc.errors.handlers import errors
     app.register_blueprint(users, url_prefix='/users')
     app.register_blueprint(pool, url_prefix='/pool')
     app.register_blueprint(races, url_prefix='/races')
     app.register_blueprint(main)
+    app.register_blueprint(errors, url_prefix='/error')
 
     return app
