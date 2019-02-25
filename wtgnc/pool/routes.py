@@ -55,6 +55,7 @@ def update_picks(pick_id):
     form.pick_2.choices = generate_entry_list()
     form.pick_3.choices = generate_entry_list()
     form.pick_4.choices = generate_entry_list()
+    form.make.choices = generate_make_list()
     if form.validate_on_submit():
         picks.driver_1 = form.pick_1.data
         picks.driver_2 = form.pick_2.data
