@@ -272,4 +272,50 @@ def make_entry():
         return redirect(url_for('pool.admin'))
     return render_template('races/make-entry.html', title='Make Entry', legend='Create Make', form=form)
 
+
+# Route to view a make entry
+@races.route('/make/<int:make_id>', methods=['GET', 'POST'])
+@login_required
+def view_make(make_id):
+    make = Make.query.get_or_404(make_id)
+    return render_template('races/make-view.html', title='Make Summary', make=make)
+
+
+# Route to update a make entry
+@races.route('/make/<int:make_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_make(make_id):
+    make = Make.query.get_or_404(make_id)
+    if current_user.role != 'admin':
+        abort(403)
+    form = MakeForm()
+    if form.validate_on_submit():
+        make.make = form.make.data
+        db.session.commit()
+        flash(f"Make has been updated.", 'success')
+        return redirect(url_for('races.make'))
+    elif request.method == 'GET':
+        form.make.data = make.make
+    return render_template('races/make-entry.html', title='Make Update', legend='Update Make', form=form)
+
+
+# Route to delete a race entry
+@races.route('/make/<int:make_id>/delete', methods=['POST'])
+@login_required
+def delete_make(make_id):
+    make = Make.query.get_or_404(make_id)
+    if current_user.role != 'admin':
+        abort(403)
+    db.session.delete(make)
+    db.session.commit()
+    flash(f"Make has been deleted", 'success')
+    return redirect(url_for('races.make_list'))
+
+
+# Route to show the current schedule
+@races.route('/make')
+def make_list():
+    make_list = Make.query.all()
+    return render_template('races/make-list.html', title='Make List', make_list=make_list)
+
 # TODO: add routes and templates to view make list, update make, and delete makes

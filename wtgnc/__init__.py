@@ -34,6 +34,6 @@ def create_app(config_class=Config):
     app.register_blueprint(users, url_prefix='/users')
     app.register_blueprint(pool, url_prefix='/pool')
     app.register_blueprint(races, url_prefix='/races')
-    app.register_blueprint(main, url_prefix='/main')
+    app.register_blueprint(main)
 
     return app

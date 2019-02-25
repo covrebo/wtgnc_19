@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+    <body class="container col-6">
+        <div class="text-center">
+            <h2 class="h2 text-muted">Make List</h2>
+        </div>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr class="text-center">
+                    <th scope="col">Make</th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                {% for make in make_list %}
+                        <tr class="text-center">
+                            <td><a href="{{ url_for('races.view_make', make_id=make.id) }}">{{ make.make }}</a></td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+{% endblock content %}
