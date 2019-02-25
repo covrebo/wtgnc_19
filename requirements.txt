@@ -23,3 +23,6 @@ six==1.12.0
 SQLAlchemy==1.2.17
 Werkzeug==0.14.1
 WTForms==2.2.1
+
+# Required for Heroku
+gunicorn==19.9.0
