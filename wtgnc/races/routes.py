@@ -104,8 +104,12 @@ def delete_driver(driver_id):
 # Route to show the current entry list
 @races.route('/entry-list')
 def entry_list():
-    entry_list = Driver.query.filter_by(week=session['week_key']).order_by(Driver.car_number).all()
-    return render_template('races/entry-list.html', title='Entry List', entry_list=entry_list)
+    if session.get('week_key'):
+        entry_list = Driver.query.filter_by(week=session['week_key']).order_by(Driver.car_number).all()
+        return render_template('races/entry-list.html', title='Entry List', entry_list=entry_list)
+    else:
+        flash("Please select a race to view.", 'info')
+        return redirect(url_for('main.week_selection'))
 
 
 # Route to create a race entry
@@ -204,9 +208,13 @@ def starting_lineup_upload():
 @races.route('/starting-lineup')
 def starting_lineup():
     # TODO: Add a route to view and update an individual starting lineup entry
-    starting_lineup = StartingLineup.query.filter_by(week=session['week_key']).order_by(StartingLineup.position).all()
-    return render_template('races/starting-lineup.html', title='Starting Lineup', starting_lineup=starting_lineup)
-
+    if session.get('week_key'):
+        starting_lineup = StartingLineup.query.filter_by(week=session['week_key']).order_by(
+            StartingLineup.position).all()
+        return render_template('races/starting-lineup.html', title='Starting Lineup', starting_lineup=starting_lineup)
+    else:
+        flash("Please select a race to view the starting lineup.", 'info')
+        return redirect(url_for('main.week_selection'))
 
 # Route to upload a race results csv
 @races.route('/upload-race-results', methods=['GET', 'POST'])
@@ -235,9 +243,12 @@ def race_results_upload():
 # Route to show the race results
 @races.route('/race-result')
 def race_result():
-    # TODO: Add a route to view and update an individual starting lineup entry
-    race_results = Result.query.filter_by(week=session['week_key']).order_by(Result.finish_position).all()
-    return render_template('races/race-result.html', title='Race Results', race_results=race_results)
+    if session.get('week_key'):
+        race_results = Result.query.filter_by(week=session['week_key']).order_by(Result.finish_position).all()
+        return render_template('races/race-result.html', title='Race Results', race_results=race_results)
+    else:
+        flash("Please select a race to view the starting lineup.", 'info')
+        return redirect(url_for('main.week_selection'))
 
 
 # Route to create a make

@@ -8,12 +8,15 @@
             <hr class="my-4">
             <p>Login to start exploring the site.</p>
             <div class="row justify-content-center">
-                <div class="col-sm-4">
+                {% if current_user.is_authenticated %}
+                    <div class="col-sm-4">
+                        <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('pool.pick_page') }}" role="button">Pick Page</a>
+                    </div>
+                {% else %}
+                    <div class="col-sm-4">
                     <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('users.login') }}" role="button">Login</a>
-                </div>
-                <div class="col-sm-4">
-                    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('pool.pick_page') }}" role="button">Pick Page</a>
-                </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </body>

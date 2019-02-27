@@ -93,6 +93,7 @@ def delete_pick(pick_id):
 def picks_summary():
     # TODO: add visibility field to picks to turn on visibility at race time from admin console while still being visible from account page
     # TODO: Reorder picks by car number when they display
+    # TODO: Add an option for active picks to determine when users can update their picks.
     picks = Pick.query.filter_by(week=session['week_num']).all()
     return render_template('pool/picks.html', title='Pick Summary', picks=picks)
 
