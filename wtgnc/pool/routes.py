@@ -175,9 +175,14 @@ def delete_weekly_result(weekly_result_id):
 
 # Route to show the weekly results
 @pool.route('/weekly-results')
+@login_required
 def weekly_results():
-    weekly_results = WeeklyResult.query.filter_by(week=session['week_num']).order_by(WeeklyResult.rank).all()
-    return render_template('pool/weekly-results.html', title='Weekly Results', weekly_results=weekly_results)
+    if session.get('week_num'):
+        weekly_results = WeeklyResult.query.filter_by(week=session['week_num']).order_by(WeeklyResult.rank).all()
+        return render_template('pool/weekly-results.html', title='Weekly Results', weekly_results=weekly_results)
+    else:
+        flash("Please select a race to view the weekly results.", 'info')
+        return redirect(url_for('main.week_selection'))
 
 
 # Route to create a weekly standing
@@ -240,6 +245,11 @@ def delete_weekly_standing(weekly_standing_id):
 
 # Route to show the weekly results
 @pool.route('/weekly-standings')
+@login_required
 def standings():
-    weekly_standings = WeeklyStanding.query.filter_by(week=session['week_num']).order_by(WeeklyStanding.rank).all()
-    return render_template('pool/standings.html', title='Weekly Standings', weekly_standings=weekly_standings)
+    if session.get('week_num'):
+        weekly_standings = WeeklyStanding.query.filter_by(week=session['week_num']).order_by(WeeklyStanding.rank).all()
+        return render_template('pool/standings.html', title='Weekly Standings', weekly_standings=weekly_standings)
+    else:
+        flash("Please select a race to view the weekly standings.", 'info')
+        return redirect(url_for('main.week_selection'))
