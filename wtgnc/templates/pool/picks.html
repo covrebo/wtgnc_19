@@ -15,14 +15,16 @@
             </thead>
             <tbody class="table-striped">
                 {% for pick in picks %}
-                    <tr class="text-center">
-                        <td><a href="{{ url_for('pool.picks_view', pick_id=pick.id) }}">{{ pick.display_name }}</a></td>
-                        <td>{{ pick.driver_1 }}</td>
-                        <td>{{ pick.driver_2 }}</td>
-                        <td>{{ pick.driver_3 }}</td>
-                        <td>{{ pick.driver_4 }}</td>
-                        <td>{{ pick.make }}</td>
-                    </tr>
+                    {% if pick.visible == True %}
+                        <tr class="text-center">
+                            <td><a href="{{ url_for('pool.picks_view', pick_id=pick.id) }}">{{ pick.display_name }}</a></td>
+                            <td>{{ pick.driver_1 }}</td>
+                            <td>{{ pick.driver_2 }}</td>
+                            <td>{{ pick.driver_3 }}</td>
+                            <td>{{ pick.driver_4 }}</td>
+                            <td>{{ pick.make }}</td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>

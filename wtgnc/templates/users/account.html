@@ -110,7 +110,9 @@
                                 <td>{{ pick.driver_3 }}</td>
                                 <td>{{ pick.driver_4 }}</td>
                                 <td>{{ pick.make }}</td>
-                                <td><a class="btn btn-primary btn-sm" href="{{ url_for('pool.update_picks', pick_id=pick.id) }}">Update</a></td>
+                                {% if pick.active == True %}
+                                    <td><a class="btn btn-primary btn-sm" href="{{ url_for('pool.update_picks', pick_id=pick.id) }}">Update</a></td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>

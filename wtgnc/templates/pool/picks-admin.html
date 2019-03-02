@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block content %}
+    <body class="container">
+        <h2 class="h2 text-center">Weekly Picks</h2>
+        <table class="table">
+            <thead class="thead-light">
+                <tr class="text-center">
+                    <th scope="col">Name</th>
+                    <th scope="col">Driver #1</th>
+                    <th scope="col">Driver #2</th>
+                    <th scope="col">Driver #3</th>
+                    <th scope="col">Driver #4</th>
+                    <th scope="col">Manufacturer</th>
+                    {% if current_user.role == 'admin' %}
+                        <th scope="col">Active</th>
+                        <th scope="col"></th>
+                        <th scope="col">Visible</th>
+                        <th scope="col"></th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                {% for pick in picks %}
+                    <tr class="text-center">
+                        <td><a href="{{ url_for('pool.picks_view', pick_id=pick.id) }}">{{ pick.display_name }}</a></td>
+                        <td>{{ pick.driver_1 }}</td>
+                        <td>{{ pick.driver_2 }}</td>
+                        <td>{{ pick.driver_3 }}</td>
+                        <td>{{ pick.driver_4 }}</td>
+                        <td>{{ pick.make }}</td>
+                        {% if current_user.role == 'admin' %}
+                            <td>{{ pick.active }}</td>
+                            <td>
+                                <form action="{{ url_for('pool.change_active_pick', pick_id=pick.id) }}" method="POST">
+                                    <input class="btn btn-primary btn-sm" type="submit" value="Active">
+                                </form>
+                            </td>
+                            <td>{{ pick.visible }}</td>
+                            <td>
+                                <form action="{{ url_for('pool.change_visible_pick', pick_id=pick.id) }}" method="POST">
+                                    <input class="btn btn-primary btn-sm" type="submit" value="Visible">
+                                </form>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+{% endblock content %}

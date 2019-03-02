@@ -74,7 +74,7 @@ def update_picks(pick_id):
     return render_template('pool/picks-update.html', title='Update Picks', legend='Update Picks', form=form, picks=picks)
 
 
-# Route to delete a driver entry
+# Route to delete a pick
 @pool.route('/picks/<int:pick_id>/delete', methods=['POST'])
 @login_required
 def delete_pick(pick_id):
@@ -87,15 +87,68 @@ def delete_pick(pick_id):
     return redirect(url_for('pool.picks_summary'))
 
 
-# Route to display all weekly picks
+# Route to deactivate a pick so user cannot update picks
+@pool.route('/picks/<int:pick_id>/active', methods=['POST'])
+@login_required
+def change_active_pick(pick_id):
+    picks = Pick.query.get_or_404(pick_id)
+    if current_user.role != 'admin':
+        abort(403)
+    if picks.active == True:
+        picks.active = False
+        db.session.commit()
+    else:
+        picks.active = True
+        db.session.commit()
+    flash(f"Picks have been updated", 'success')
+    return redirect(url_for('pool.admin_picks_summary'))
+
+
+# Route to make a pick visible
+@pool.route('/picks/<int:pick_id>/visible', methods=['POST'])
+@login_required
+def change_visible_pick(pick_id):
+    picks = Pick.query.get_or_404(pick_id)
+    if current_user.role != 'admin':
+        abort(403)
+    if picks.visible == True:
+        picks.visible = False
+        db.session.commit()
+    else:
+        picks.visible = True
+        db.session.commit()
+    flash(f"Picks have been updated", 'success')
+    return redirect(url_for('pool.admin_picks_summary'))
+
+
+# Route to display all weekly picks for admins
+@pool.route('/admin-picks-summary')
+@login_required
+def admin_picks_summary():
+    # TODO: add visibility field to picks to turn on visibility at race time from admin console while still being visible from account page
+    # TODO: Reorder picks by car number when they display
+    # TODO: Add an option for active picks to determine when users can update their picks.
+    if session.get('week_num'):
+        picks = Pick.query.filter_by(week=session['week_num']).all()
+        return render_template('pool/picks-admin.html', title='Pick Administration', picks=picks)
+    else:
+        flash("Please select a race to view the weekly picks.", 'info')
+        return redirect(url_for('main.week_selection'))
+
+
+# Route to display all weekly picks for users
 @pool.route('/picks-summary')
 @login_required
 def picks_summary():
     # TODO: add visibility field to picks to turn on visibility at race time from admin console while still being visible from account page
     # TODO: Reorder picks by car number when they display
     # TODO: Add an option for active picks to determine when users can update their picks.
-    picks = Pick.query.filter_by(week=session['week_num']).all()
-    return render_template('pool/picks.html', title='Pick Summary', picks=picks)
+    if session.get('week_num'):
+        picks = Pick.query.filter_by(week=session['week_num']).all()
+        return render_template('pool/picks.html', title='Pick Summary', picks=picks)
+    else:
+        flash("Please select a race to view the weekly picks.", 'info')
+        return redirect(url_for('main.week_selection'))
 
 
 # Route to the administration page
