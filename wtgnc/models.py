@@ -93,7 +93,7 @@ class Pick(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     active = db.Column(db.Boolean, nullable=False, default=True, server_default='False')
-    visible = db.Column(db.Boolean, nullable=False, default=True, server_default='False')
+    visible = db.Column(db.Boolean, nullable=False, default=False, server_default='False')
 
     def __repr__(self):
         return f"Pick('{self.week}', '{self.display_name}', '{self.driver_1}', '{self.driver_2}'," \
