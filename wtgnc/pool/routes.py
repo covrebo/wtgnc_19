@@ -125,9 +125,7 @@ def change_visible_pick(pick_id):
 @pool.route('/admin-picks-summary')
 @login_required
 def admin_picks_summary():
-    # TODO: add visibility field to picks to turn on visibility at race time from admin console while still being visible from account page
     # TODO: Reorder picks by car number when they display
-    # TODO: Add an option for active picks to determine when users can update their picks.
     if session.get('week_num'):
         picks = Pick.query.filter_by(week=session['week_num']).all()
         return render_template('pool/picks-admin.html', title='Pick Administration', picks=picks)
@@ -140,9 +138,7 @@ def admin_picks_summary():
 @pool.route('/picks-summary')
 @login_required
 def picks_summary():
-    # TODO: add visibility field to picks to turn on visibility at race time from admin console while still being visible from account page
     # TODO: Reorder picks by car number when they display
-    # TODO: Add an option for active picks to determine when users can update their picks.
     if session.get('week_num'):
         picks = Pick.query.filter_by(week=session['week_num']).all()
         return render_template('pool/picks.html', title='Pick Summary', picks=picks)
