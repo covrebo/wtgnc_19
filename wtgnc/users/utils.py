@@ -33,6 +33,8 @@ def send_reset_email(user):
 
 If you did not make this request.  Ignore this email and no changes will be made.
 
+The reset link is valid for 30 minutes.
+
 Yours Truly,
 WTGNC Helper Bot
 '''

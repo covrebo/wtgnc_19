@@ -25,7 +25,7 @@ def pick_page():
             flash(f"Sorry, you have already submitted picks for {session['week_name']}.  Please visit the account page to update your picks or select a different week.", 'info')
             redirect(url_for('pool.pick_page'))
         else:
-            picks = Pick(week=session['week_num'], display_name=current_user.display_name, driver_1=form.pick_1.data,
+            picks = Pick(week=session['week_key'], display_name=current_user.display_name, driver_1=form.pick_1.data,
                          driver_2=form.pick_2.data, driver_3=form.pick_3.data, driver_4=form.pick_4.data,
                          make=form.make.data, user_id=current_user.id)
             db.session.add(picks)
@@ -126,8 +126,8 @@ def change_visible_pick(pick_id):
 @login_required
 def admin_picks_summary():
     # TODO: Reorder picks by car number when they display
-    if session.get('week_num'):
-        picks = Pick.query.filter_by(week=session['week_num']).all()
+    if session.get('week_key'):
+        picks = Pick.query.filter_by(week=session['week_key']).all()
         return render_template('pool/picks-admin.html', title='Pick Administration', picks=picks)
     else:
         flash("Please select a race to view the weekly picks.", 'info')
@@ -139,8 +139,8 @@ def admin_picks_summary():
 @login_required
 def picks_summary():
     # TODO: Reorder picks by car number when they display
-    if session.get('week_num'):
-        picks = Pick.query.filter_by(week=session['week_num']).all()
+    if session.get('week_key'):
+        picks = Pick.query.filter_by(week=session['week_key']).all()
         return render_template('pool/picks.html', title='Pick Summary', picks=picks)
     else:
         flash("Please select a race to view the weekly picks.", 'info')

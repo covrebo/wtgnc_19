@@ -105,4 +105,8 @@ venv.bak/
 .idea/
 
 # uploads
-.csv
+*.csv
+
+# db backups
+*.dump
+
