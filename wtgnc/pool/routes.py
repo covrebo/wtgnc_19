@@ -1,7 +1,7 @@
 from flask_login import current_user, login_required
 from wtgnc import db
 from flask import render_template, url_for, session, flash, redirect, request, abort, Blueprint
-from wtgnc.pool.forms import PickSelectionForm, WeeklyResultForm, WeeklyStandingForm, WeeklyResultUpdateForm, WeeklyStandingUpdateForm
+from wtgnc.pool.forms import PickSelectionForm, WeeklyResultForm, WeeklyStandingForm, WeeklyResultUpdateForm, WeeklyStandingUpdateForm, AdminPickSelectionForm
 from wtgnc.models import User, Pick, WeeklyResult, WeeklyStanding
 from wtgnc.pool.utils import generate_entry_list, generate_make_list, generate_user_list
 
@@ -13,21 +13,43 @@ pool = Blueprint('pool', __name__, template_folder='templates')
 @login_required
 def pick_page():
     # TODO add modal to the page to confirm which week they are pick for
-    form = PickSelectionForm()
-    form.pick_1.choices = generate_entry_list()
-    form.pick_2.choices = generate_entry_list()
-    form.pick_3.choices = generate_entry_list()
-    form.pick_4.choices = generate_entry_list()
-    form.make.choices = generate_make_list()
+    # Load the correct form based on user role
+    if current_user.role == 'admin':
+        form = AdminPickSelectionForm()
+        form.user.choices = generate_user_list()
+        form.pick_1.choices = generate_entry_list()
+        form.pick_2.choices = generate_entry_list()
+        form.pick_3.choices = generate_entry_list()
+        form.pick_4.choices = generate_entry_list()
+        form.make.choices = generate_make_list()
+    else:
+        form = PickSelectionForm()
+        form.pick_1.choices = generate_entry_list()
+        form.pick_2.choices = generate_entry_list()
+        form.pick_3.choices = generate_entry_list()
+        form.pick_4.choices = generate_entry_list()
+        form.make.choices = generate_make_list()
     if form.validate_on_submit():
-        pick_check = Pick.query.filter_by(week=session['week_num'], user_id=current_user.id).first()
+        # Check if picks have been submitted based on role of user submitting picks
+        if current_user.role == 'admin':
+            pick_check = Pick.query.filter_by(week=session['week_key'], user_id=form.user.data).first()
+        else:
+            pick_check = Pick.query.filter_by(week=session['week_key'], user_id=current_user.id).first()
+        # Flash a message that picks exist of picks have already been submitted
         if pick_check:
             flash(f"Sorry, you have already submitted picks for {session['week_name']}.  Please visit the account page to update your picks or select a different week.", 'info')
             redirect(url_for('pool.pick_page'))
+        # Add picks to database if there are no picks for the selected week.
         else:
-            picks = Pick(week=session['week_key'], display_name=current_user.display_name, driver_1=form.pick_1.data,
-                         driver_2=form.pick_2.data, driver_3=form.pick_3.data, driver_4=form.pick_4.data,
-                         make=form.make.data, user_id=current_user.id)
+            if current_user.role == 'admin':
+                user_summary = User.query.filter_by(id=form.user.data).first()
+                picks = Pick(week=session['week_key'], display_name=user_summary.display_name,
+                             driver_1=form.pick_1.data, driver_2=form.pick_2.data, driver_3=form.pick_3.data,
+                             driver_4=form.pick_4.data, make=form.make.data, user_id=form.user.data)
+            else:
+                picks = Pick(week=session['week_key'], display_name=current_user.display_name,
+                             driver_1=form.pick_1.data, driver_2=form.pick_2.data, driver_3=form.pick_3.data,
+                             driver_4=form.pick_4.data, make=form.make.data, user_id=current_user.id)
             db.session.add(picks)
             db.session.commit()
             flash(f"You have submitted picks for {session['week_name']}.  Good Luck!", 'success')

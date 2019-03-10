@@ -1,11 +1,33 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, SubmitField, IntegerField
+from wtforms import SelectField, SubmitField, IntegerField, BooleanField
 from wtforms.validators import DataRequired
 
 
 # Form to submit picks each week
 class PickSelectionForm(FlaskForm):
     # Form field to choose the week to display data from
+    pick_1 = SelectField(validators=[
+        DataRequired()
+        ], coerce=str)
+    pick_2 = SelectField(validators=[
+        DataRequired()
+        ], coerce=str)
+    pick_3 = SelectField(validators=[
+        DataRequired()
+        ], coerce=str)
+    pick_4 = SelectField(validators=[
+        DataRequired()
+        ], coerce=str)
+    make = SelectField(validators=[
+        DataRequired()
+        ], coerce=str)
+    submit = SubmitField('Set Roster')
+
+
+# Form to submit picks each week
+class AdminPickSelectionForm(FlaskForm):
+    # Form field to choose the week to display data from
+    user = SelectField(coerce=str)
     pick_1 = SelectField(validators=[
         DataRequired()
         ], coerce=str)
