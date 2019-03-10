@@ -110,3 +110,6 @@ venv.bak/
 # db backups
 *.dump
 
+# mac stuff
+*.DS_Store
+
